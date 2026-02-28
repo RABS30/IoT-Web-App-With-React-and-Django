@@ -67,21 +67,21 @@ while True:
             "chart": "bar"
         },
         {
-            "id"   : "1",
+            "id"   : "4",
             "name" : "Sensor 1",
             "data" : random.randint(10, 100),
             "date" : str(datetime.datetime.today()),
             "chart": "doughnut"
         },
         {
-            "id"   : "2",
+            "id"   : "5",
             "name" : "Sensor 2",
             "data" : random.randint(10, 100),
             "date" : str(datetime.datetime.today()),
             "chart": "bar"
         },
         {
-            "id"   : "3",
+            "id"   : "6",
             "name" : "Sensor 3",
             "data" : random.randint(10, 100),
             "date" : str(datetime.datetime.today()),
