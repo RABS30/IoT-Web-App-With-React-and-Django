@@ -8,27 +8,21 @@ import random
 # Konfigurasi MQTT
 BROKER      = "broker.emqx.io"
 PORT        = 1883
-subscribe   = "monitoring/python"
-publish     = "monitoring/microcontroler"
+subscribe   = "monitoring/device"
+backend     = "monitoring/backend"
+frontend    = "monitoring/frontend"
 
 # =========================================== #
 # ============ CALLBACK FUNCTION ============ #
 
 # Callback saat MQTT berhasil terkoneksi 
 def onConnectCallback(client, userdata, flags, reasonCode, prop):
-    print("Ini client ", dir(client))
-    # print("Ini userdata ", dir(userdata))
-    # print("Ini flags ", dir(flags))
-    print("Ini reasonCode ", dir(reasonCode))
-    print("Ini prop ", dir(prop))
-
     # subscribe topic 
     client.subscribe(subscribe)
 
 # Callback saat MQTT menerima data
-def onMessageCallback(*args, **kwargs):
-    print("Ini args get message : ", args )
-    print("Ini kwargs get message :", kwargs)
+def onMessageCallback(client, userdata, message):
+    print("Ini args get message : ", message.payload.decode())
 
 
 
@@ -52,28 +46,56 @@ time.sleep(5)
 while True:
     message = [
         {
+            "id"   : "1",
             "name" : "Sensor 1",
             "data" : random.randint(10, 100),
-            "date" : str(datetime.datetime.today())
+            "date" : str(datetime.datetime.today()),
+            "chart": "doughnut"
         },
         {
+            "id"   : "2",
             "name" : "Sensor 2",
             "data" : random.randint(10, 100),
-            "date" : str(datetime.datetime.today())
+            "date" : str(datetime.datetime.today()),
+            "chart": "bar"
         },
         {
+            "id"   : "3",
             "name" : "Sensor 3",
             "data" : random.randint(10, 100),
-            "date" : str(datetime.datetime.today())
+            "date" : str(datetime.datetime.today()),
+            "chart": "bar"
+        },
+        {
+            "id"   : "1",
+            "name" : "Sensor 1",
+            "data" : random.randint(10, 100),
+            "date" : str(datetime.datetime.today()),
+            "chart": "doughnut"
+        },
+        {
+            "id"   : "2",
+            "name" : "Sensor 2",
+            "data" : random.randint(10, 100),
+            "date" : str(datetime.datetime.today()),
+            "chart": "bar"
+        },
+        {
+            "id"   : "3",
+            "name" : "Sensor 3",
+            "data" : random.randint(10, 100),
+            "date" : str(datetime.datetime.today()),
+            "chart": "bar"
         },
 
     ]
 
     if client.is_connected() :
         # Mengirim data ke topic
-        client.publish(publish, json.dumps(message))
+        client.publish(backend, json.dumps(message))
+        client.publish(frontend, json.dumps(message))
         # print("Message sent", message)
-        time.sleep(5)
+        time.sleep(1)
     else :
         print("Koneksi MQTT terputus")
         time.sleep(5)
