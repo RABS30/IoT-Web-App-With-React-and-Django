@@ -28,6 +28,24 @@ export default function DeviceStatus() {
       lastSeen: "2026-02-27 09:12:10",
       rssi: -90,
       battery: 20
+    },
+    {
+      id: 4,
+      name: "Water Pump",
+      status: "offline",
+      power: false,
+      lastSeen: "2026-02-27 09:12:10",
+      rssi: -90,
+      battery: 20
+    },
+    {
+      id: 5,
+      name: "Water Pump",
+      status: "offline",
+      power: false,
+      lastSeen: "2026-02-27 09:12:10",
+      rssi: -90,
+      battery: 20
     }
   ]);
 
@@ -58,7 +76,7 @@ export default function DeviceStatus() {
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-6 bg-gray-100">
+    <div className="grid grid-cols-1 md:grid-cols-5 gap-6 p-6 bg-gray-100">
       {devices.map((device) => (
         <div key={device.id} className="bg-white p-6 rounded-2xl shadow-md flex flex-col justify-between">
           {/* Header */}

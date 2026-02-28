@@ -67,7 +67,40 @@ export default function Charts() {
   }
 
   // Message from MQTT
-  const [message , setMessage] = useState(null)
+  const [message , setMessage] = useState([
+        {
+            "id"   : "1",
+            "name" : "Sensor 1",
+            "data" : 50,
+            "chart": "doughnut"
+        },
+        {
+            "id"   : "2",
+            "name" : "Sensor 2",
+            "data" : 50,
+            "chart": "bar"
+        },
+        {
+            "id"   : "3",
+            "name" : "Sensor 3",
+            "data" : 50,
+            "chart": "bar"
+        },
+        {
+            "id"   : "4",
+            "name" : "Sensor 1",
+            "data" : 50,
+            "chart": "doughnut"
+        },
+        {
+            "id"   : "5",
+            "name" : "Sensor 2",
+            "data" : 50,
+            "chart": "bar"
+        }
+
+    ]
+)
 
   // Connect to MQTT
   useEffect(() => {
@@ -110,7 +143,6 @@ export default function Charts() {
               <div className="grid grid-cols-1 md:grid-cols-5 gap-6 p-6 bg-gray-100 h-auto">
                   {/* === Card Sensor Chart === */}
                   {message.map((data) => (
-                    <>
                       <div key={data.id} className="bg-white p-4 rounded-xl shadow-md aspect-square flex flex-col">
                         {/* === Nama Sensor === */}
                         <h2 className="text-lg font-semibold mb-3">
@@ -142,7 +174,7 @@ export default function Charts() {
                           {data.chart === "doughnut" && (
                             <Doughnut
                               data={{
-                                labels: ["Used", ""],
+                                labels: [data.data, ""],
                                 datasets: [
                                   {
                                     data: [data.data, 100 - data.data],
@@ -158,10 +190,10 @@ export default function Charts() {
                           {data.chart === "bar" && (
                             <Bar
                               data={{
-                                labels: [data.name],
+                                labels: [data.data],
                                 datasets: [
                                   {
-                                    label: "Value",
+                                    label: data.name,
                                     data: [data.data],
                                     backgroundColor: data.data < 50 ? ["#6366f1"] : ["#ce0101"]
                                     
@@ -191,8 +223,6 @@ export default function Charts() {
                           </button>
                         </div>
                       </div>
-                    </>
-                    
                   ))}
 
               </div>
