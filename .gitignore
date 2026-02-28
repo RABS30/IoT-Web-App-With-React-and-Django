@@ -26,3 +26,10 @@ dist-ssr
 
 # Backend
 *.env
+env
+bin
+
+# Flowchart
+Flowchart.excalidraw
+Flowchart.png
+Flowchart.svg
