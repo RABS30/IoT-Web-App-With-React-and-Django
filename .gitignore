@@ -28,8 +28,12 @@ dist-ssr
 *.env
 env
 bin
+__pycache__
 
 # Flowchart
 Flowchart.excalidraw
 Flowchart.png
 Flowchart.svg
+
+# vscode
+.vscode
