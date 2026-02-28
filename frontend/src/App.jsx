@@ -1,13 +1,11 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-import Navbar from "./components/navbar";
 import Charts from "./components/Charts";
 import RealTimeTable from "./components/RealTimeTable";
 import SummaryChart from "./components/SummaryChart";
-
-function Dashboard() {
-  return <div className="p-6">Halaman Dashboard</div>;
-}
+import Navbar from "./components/Navbar";
+import ClientMQTTComponents from "./pages/ClientMQTTComponents";
+import Dashboard from "./components/dashboard";
 
 function DeviceSettings() {
   return <div className="p-6">Halaman Device Settings</div>;
@@ -22,9 +20,10 @@ function App() {
     <Router>
       <Navbar />
       <Routes>
-        <Route path="/" element={[<Charts />, <RealTimeTable />, <SummaryChart />]} />
-        <Route path="/device" element={<DeviceSettings />} />
-        <Route path="/account" element={<AccountSettings />} />
+        <Route path="/"         element={<Dashboard />} />
+        <Route path="/device"   element={<DeviceSettings />} />
+        <Route path="/account"  element={<AccountSettings />} />
+        <Route path="/mqtt"    element={<ClientMQTTComponents />} />
       </Routes>
     </Router>
   );

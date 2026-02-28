@@ -34,27 +34,69 @@ export default function SummaryChart() {
   };
 
   return (
-    <div className="p-6">
-      <div className="bg-white shadow rounded-xl p-4">
-        <div className="flex justify-between mb-4">
-          <h2 className="text-lg font-semibold">
-            Rangkuman Sensor
-          </h2>
+    <>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-6 bg-white h-auto">
+        <div className="p-6">
+          <div className="bg-white shadow rounded-xl p-4">
+            <div className="flex justify-between mb-4">
+              <h2 className="text-lg font-semibold">
+                Rangkuman Sensor
+              </h2>
 
-          <select
-            value={period}
-            onChange={(e) => setPeriod(e.target.value)}
-            className="border rounded px-3 py-1"
-          >
-            <option value="24jam">24 Jam</option>
-            <option value="harian">Harian</option>
-            <option value="bulanan">Bulanan</option>
-            <option value="tahunan">Tahunan</option>
-          </select>
+              <select value={period} onChange={(e) => setPeriod(e.target.value)} className="border rounded px-3 py-1">
+                <option value="24jam">24 Jam</option>
+                <option value="harian">Harian</option>
+                <option value="bulanan">Bulanan</option>
+                <option value="tahunan">Tahunan</option>
+              </select>
+            </div>
+
+            <Line data={generateData()} />
+          </div>
         </div>
+        
+        <div className="p-6">
+          <div className="bg-white shadow rounded-xl p-4">
+            <div className="flex justify-between mb-4">
+              <h2 className="text-lg font-semibold">
+                Rangkuman Sensor
+              </h2>
 
-        <Line data={generateData()} />
+              <select value={period} onChange={(e) => setPeriod(e.target.value)} className="border rounded px-3 py-1">
+                <option value="24jam">24 Jam</option>
+                <option value="harian">Harian</option>
+                <option value="bulanan">Bulanan</option>
+                <option value="tahunan">Tahunan</option>
+              </select>
+            </div>
+
+            <Line data={generateData()} />
+          </div>
+        </div>
+      
+        <div className="p-6">
+          <div className="bg-white shadow rounded-xl p-4">
+            <div className="flex justify-between mb-4">
+              <h2 className="text-lg font-semibold">
+                Rangkuman Sensor
+              </h2>
+
+              <select value={period} onChange={(e) => setPeriod(e.target.value)} className="border rounded px-3 py-1">
+                <option value="24jam">24 Jam</option>
+                <option value="harian">Harian</option>
+                <option value="bulanan">Bulanan</option>
+                <option value="tahunan">Tahunan</option>
+              </select>
+            </div>
+
+            <Line data={generateData()} />
+          </div>
+        </div>
+      
+      
       </div>
-    </div>
+
+     
+    </>
   );
 }
