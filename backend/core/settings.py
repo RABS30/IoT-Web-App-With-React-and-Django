@@ -30,6 +30,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'core',
+    'device',
+    "rest_framework",
 ]
 
 MIDDLEWARE = [
@@ -73,6 +76,8 @@ DATABASES = {
         'PASSWORD'  : os.getenv("DATABASE_PASS"),
         'HOST'      : os.getenv("DATABASE_HOST"),
         'PORT'      : os.getenv("DATABASE_PORT"),
+    
+        'DISABLE_SERVER_SIDE_CURSORS': True,
     }
 }
 
