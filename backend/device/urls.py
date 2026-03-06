@@ -3,5 +3,6 @@ from .views import DeviceListView
 
 
 urlpatterns = [
-    path("", DeviceListView)
+    path("device/", DeviceListView),
+    path("device/<pk>/toggle", DeviceListView)
 ]

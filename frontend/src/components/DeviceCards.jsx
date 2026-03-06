@@ -9,7 +9,7 @@ export default function DeviceCards() {
 //   const 
 
   useEffect(() => {
-    axios.get('http://127.0.0.1:8000/')
+    axios.get('http://127.0.0.1:8000/device/')
     .then(function (response) {
         // handle success
       setDevices(response.data)
@@ -38,6 +38,20 @@ export default function DeviceCards() {
     console.log("Publish MQTT control...");
   };
 
+  const buttonClicked = (idDevice, type, status) => {
+    axios.post("http://127.0.0.1:8000/device/", {
+      idDevice: idDevice,
+      type: type,
+      status: !status,
+    })
+    .then((res) => {
+      console.log("INi RES DATA : ", res.data) 
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+  }
+  
   const getStatusColor = (status) => {
     if (status === true) return "bg-green-500";
     if (status === false) return "bg-red-500";
@@ -101,10 +115,11 @@ export default function DeviceCards() {
                 {device.sensor.threshold} {device.sensor.measurement}
               </span>
             </p>
+          </div>
             {/* BUTTON AREA */}
             <div className="flex gap-3 mt-6">
               {/* On Off Button */}
-              <button className={`flex-1 py-2 rounded-lg text-sm font-semibold text-white transition ${device.sensor.status ? "bg-red-600 hover:bg-red-700" : "bg-green-600 hover:bg-green-700"}`}>
+              <button  onClick={() => buttonClicked(device.idDevice, device.type, device.sensor.status)}  className={`flex-1 py-2 rounded-lg text-sm font-semibold text-white transition ${device.sensor.status ? "bg-red-600 hover:bg-red-700" : "bg-green-600 hover:bg-green-700"}`}>
                 {device.sensor.status ? "Turn OFF" : "Turn ON"}
               </button>
               {/* Edit Button */}
@@ -112,7 +127,6 @@ export default function DeviceCards() {
                 Edit
               </button>
             </div>
-          </div>
         </div> 
         : 
         // Actuator Cards
@@ -158,15 +172,15 @@ export default function DeviceCards() {
                   {device.actuator.sensorTarget.device} 
                 </span>
               </p>
-            
             </>}
+          </div>
 
             {/* BUTTON AREA */}
             <div className="flex gap-3 mt-6">
 
               {/* On Off Button */}
-              <button className={`flex-1 py-2 rounded-lg text-sm font-semibold text-white transition ${device.actuator.status ? "bg-red-600 hover:bg-red-700" : "bg-green-600 hover:bg-green-700"}`}>
-                {device.actuator.status ? "Turn OFF" : "Turn ON"}
+              <button onClick={() => buttonClicked(device.idDevice, device.type, device.actuator.status)} className={`flex-1 py-2 rounded-lg text-sm font-semibold text-white transition ${device.actuator.status ? "bg-red-600 hover:bg-red-700" : "bg-green-600 hover:bg-green-700"}`}>
+                {device.actuator.status ? "Turn OFF": "Turn ON"}
               </button>
 
               {/* Edit Button */}
@@ -177,10 +191,8 @@ export default function DeviceCards() {
               </button>
 
             </div>
-          </div>
         </div> 
       ))}
-
     </div>
   );
 }
