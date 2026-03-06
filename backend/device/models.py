@@ -25,11 +25,12 @@ class Device(models.Model) :
         return f"{self.name}, {self.idDevice}"
     
 class Sensor(models.Model):
-    device      = models.OneToOneField(Device, on_delete=models.CASCADE, limit_choices_to={'type': 'sensor'})
+    device      = models.OneToOneField(Device, verbose_name="Device", on_delete=models.CASCADE, limit_choices_to={'type': 'sensor'}, related_name="sensor", to_field="name")
     maxValue    = models.IntegerField(verbose_name="Nilai maksimal")
     threshold   = models.IntegerField(verbose_name="Nilai ambang batas")
-    status      = models.CharField(verbose_name="Status Sensor", max_length=3, choices=[("on", "On"), ("off", "Off")])
+    status      = models.BooleanField(verbose_name="Status Aktuator", choices=[(True, "On"), (False, "Off")])
     measurement = models.CharField(verbose_name="Satuan Ukur", max_length=10)
+    value       = models.IntegerField(verbose_name="Nilai Sensor", default=0)
     
     def save(self, *args, **kwargs):
         if self.device.type != "sensor":
@@ -41,12 +42,13 @@ class Sensor(models.Model):
         return f"{self.device}"
 
 class Actuator(models.Model):
-    device          = models.OneToOneField(Device, verbose_name= "Device", on_delete=models.CASCADE, limit_choices_to={'type': 'aktuator'})
-    status          = models.CharField(verbose_name="Status Aktuator", max_length=3, choices=[("on", "On"), ("off", "Off")])
+    device          = models.OneToOneField(Device, verbose_name= "Device", on_delete=models.CASCADE, limit_choices_to={'type': 'aktuator'}, related_name='actuator', to_field="name")
+    status      = models.BooleanField(verbose_name="Status Aktuator", choices=[(True, "On"), (False, "Off")])
     activation      = models.CharField(verbose_name="Aktifasi Aktuator", max_length=6, choices=[("sensor", "Berdasarkan Sensor"), ("manual", "Manual")])
     sensorTarget    = models.ForeignKey(Sensor, verbose_name="Sensor Target", on_delete=models.CASCADE, null=True, blank=True)
     activationValue = models.IntegerField(verbose_name="Nilai Aktifasi Aktuator", null=True, blank=True)
-    compararison    = models.CharField(verbose_name="Perbandingan", max_length=10, choices=[("==", "=="), ("<=", "<="), (">=", ">=")], blank=True, null=True)
+    compararison    = models.CharField(verbose_name="Perbandingan", max_length=5, choices=[("==", "=="), ("<=", "<="), (">=", ">=")], blank=True, null=True)
+    
     
     def save(self, *args, **kwargs):
         if self.device.type != "aktuator" :
