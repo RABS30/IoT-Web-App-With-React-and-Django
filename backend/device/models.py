@@ -6,13 +6,13 @@ import string
 class Device(models.Model) :
     idDevice= models.CharField(verbose_name="ID", max_length=10, unique=True, editable=False)
     name    = models.CharField(verbose_name="Device", max_length=100, unique=True)
-    type    = models.CharField(verbose_name="Type", max_length=10, choices=[("sensor", "Sensor"), ("aktuator", "Aktuator")])
+    type    = models.CharField(verbose_name="Type", max_length=10, choices=[("sensor", "Sensor"), ("actuator", "Actuator")])
     
     
     def save(self, *args, **kwargs):
         if not self.idDevice :
             self.idDevice = self.generateUniqueID()
-            super().save(*args, **kwargs)        
+        super().save(*args, **kwargs)        
  
     def generateUniqueID(self):
         characters = string.ascii_uppercase + string.digits
@@ -28,7 +28,7 @@ class Sensor(models.Model):
     device      = models.OneToOneField(Device, verbose_name="Device", on_delete=models.CASCADE, limit_choices_to={'type': 'sensor'}, related_name="sensor", to_field="name")
     maxValue    = models.IntegerField(verbose_name="Nilai maksimal")
     threshold   = models.IntegerField(verbose_name="Nilai ambang batas")
-    status      = models.BooleanField(verbose_name="Status Aktuator", choices=[(True, "On"), (False, "Off")])
+    status      = models.BooleanField(verbose_name="Status Sensor", choices=[(True, "On"), (False, "Off")])
     measurement = models.CharField(verbose_name="Satuan Ukur", max_length=10)
     value       = models.IntegerField(verbose_name="Nilai Sensor", default=0)
     
@@ -42,8 +42,8 @@ class Sensor(models.Model):
         return f"{self.device}"
 
 class Actuator(models.Model):
-    device          = models.OneToOneField(Device, verbose_name= "Device", on_delete=models.CASCADE, limit_choices_to={'type': 'aktuator'}, related_name='actuator', to_field="name")
-    status      = models.BooleanField(verbose_name="Status Aktuator", choices=[(True, "On"), (False, "Off")])
+    device          = models.OneToOneField(Device, verbose_name= "Device", on_delete=models.CASCADE, limit_choices_to={'type': 'actuator'}, related_name='actuator', to_field="name")
+    status          = models.BooleanField(verbose_name="Status Aktuator", choices=[(True, "On"), (False, "Off")])
     activation      = models.CharField(verbose_name="Aktifasi Aktuator", max_length=6, choices=[("sensor", "Berdasarkan Sensor"), ("manual", "Manual")])
     sensorTarget    = models.ForeignKey(Sensor, verbose_name="Sensor Target", on_delete=models.CASCADE, null=True, blank=True)
     activationValue = models.IntegerField(verbose_name="Nilai Aktifasi Aktuator", null=True, blank=True)
@@ -51,7 +51,7 @@ class Actuator(models.Model):
     
     
     def save(self, *args, **kwargs):
-        if self.device.type != "aktuator" :
+        if self.device.type != "actuator" :
             raise ValueError(f"Type must be Actuator can not ", self.device.type)
         else :
             super().save(*args, **kwargs)
