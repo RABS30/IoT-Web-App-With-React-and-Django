@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from "react";
 
 import axios from "axios"; 
 
+import Toast from "./toast";
+
 export default function DeviceCards() {
 {/* ================= VARIABLE AND STATE ================= */}
   // Data Device
@@ -36,6 +38,16 @@ export default function DeviceCards() {
     activationValue: 0
   })
 
+  // Turn on/off notification
+  const [toast, setToast] = useState(false)
+
+  // Message for notification
+  const [messageToast, setMessageToast] = useState({
+    type    :"",
+    status  :"",
+    message :""
+  })
+
 {/* ================= GET API FIRST TIME ================= */}
   // GET Data Device first time
   useEffect(() => {
@@ -43,22 +55,21 @@ export default function DeviceCards() {
       params: filterSearch
     })
     .then(function (response) {
-        // handle success
+      triggerToast(true, "success", "Success!!", "Data berhasil diambil")
+      // handle success
       setDevices(response.data)
-      console.log(response.data)
       })
     .catch(function (error) {
         // handle error
-        console.log(error);
+        triggerToast(true, "error", `${error.status} ${error.message}`, "Data gagal diambil")
     })
     .finally(function () {
         // always executed
     });
   }, [])
 
-
-{/* ================= FUNCTION UTILITIES ================= */}
-  // Button status turn on/off for device
+{/* ================= REST API  ================= */}
+  // POST = Turn On/Off status Device
   const onOffButtonClicked = (idDevice, type, status) => {
     axios.post("http://127.0.0.1:8000/device/", {
       post: "statusUpdate",
@@ -68,12 +79,56 @@ export default function DeviceCards() {
     })
     .then((res) => {
       filterButtonClicked()
+      triggerToast(true, "success", "Success", "Data berhasil diperbarui")
     })
-    .catch((err) => {
-      console.log(err)
+    .catch((error) => {
+      <div id="alert-1" class="flex sm:items-center p-4 mb-4 text-sm text-fg-brand-strong rounded-base bg-brand-softer" role="alert">
+        <svg class="w-4 h-4 shrink-0 mt-0.5 md:mt-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11h2v5m-2 0h4m-2.592-8.5h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>
+        <span class="sr-only">Info</span>
+        <div class="ms-2 text-sm">
+          A simple info alert with an <a href="#" class="font-medium underline hover:no-underline">example link</a>. Give it a click if you like.
+        </div>
+          <button type="button" class="ms-auto -mx-1.5 -my-1.5 rounded focus:ring-2 focus:ring-brand-medium hover:bg-brand-soft inline-flex items-center justify-center h-8 w-8 shrink-0 shrink-0" data-dismiss-target="#alert-1" aria-label="Close">
+            <span class="sr-only">Close</span>
+            <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18 17.94 6M18 18 6.06 6"/></svg>
+        </button>
+      </div>
+      triggerToast(true, "error", `${error.status} ${error.message}`, "Data gagal diperbarui")
+
     })
   }
 
+  // POST = Create New Device
+  const submitNewDevice = () => {
+    axios.post("http://127.0.0.1:8000/device/", newDevice).then((res) => {
+      triggerToast(true, "success", "Success", "Data berhasil ditambah")
+
+      // GET data filtered
+      filterButtonClicked()
+      // Show off pop up
+      setShowAddModal(false)
+      // Reset default data for new Device
+      setNewDevice({
+        post: "new",
+        name: "",
+        status: true,
+        type: "sensor",
+        maxValue: "",
+        threshold: "",
+        measurement: "",
+        activation: "manual",
+        comparison: ">",
+        sensorTarget: "",
+        activationValue: 0
+      })
+
+    }).catch((error) => {
+      triggerToast(true, "error", `${error.status} ${error.message}`, "Data gagal ditambahkan")
+
+    })
+  }
+
+{/* ================= FUNCTION UTILITIES ================= */}
   // Filter = Type
   const typeFilterChange = (e) => {
     setFilterSearch({...filterSearch, type: e.target.value})
@@ -90,6 +145,7 @@ export default function DeviceCards() {
   const searchFilterChange = (e) => {
     setFilterSearch({...filterSearch, search: e.target.value})
   }
+  
   // Run Filter
   const filterButtonClicked = () => {
     axios.get("http://127.0.0.1:8000/device/", {
@@ -112,11 +168,11 @@ export default function DeviceCards() {
   };
 
   // Menampilkan Pop Up for add new device
-  const showPopUpAddDevice = (bool) => {
-    setShowAddModal(bool)
+  const showPopUpAddDevice = (show) => {
+    setShowAddModal(show)
   }
 
-  // Update data form new device
+  // Update data for new device
   const handleFormChange = (e) => {
     const { name, value } = e.target
 
@@ -126,39 +182,24 @@ export default function DeviceCards() {
     })
   }
 
-  // Submit data baru
-  const submitNewDevice = () => {
-    axios.post("http://127.0.0.1:8000/device/", newDevice).then((res) => {
-      // GET data filtered
-      filterButtonClicked()
-      // Show off pop up
-      setShowAddModal(false)
 
-      // Reset default data for new Device
-      setNewDevice({
-        post: "new",
-        name: "",
-        status: true,
-        type: "sensor",
-        maxValue: "",
-        threshold: "",
-        measurement: "",
-        activation: "manual",
-        comparison: ">",
-        sensorTarget: "",
-        activationValue: 0
-
-      })
-    }).catch((err) => {
-      console.log(err)
+  // Trigger notification
+  const triggerToast = (toast, type, status, message) => {
+    setMessageToast({
+      type    : type,
+      status  : status,
+      message : message
     })
+    setToast(toast)
   }
 
 
 
   return (
     <>
-      {/* ================= POP UP ADD NEW DEVICE ================= */}
+
+      <Toast toast={toast} setToast={setToast} type={messageToast["type"]} status={messageToast["status"]} message={messageToast["message"]}/>
+{/* ================= POP UP ADD NEW DEVICE ================= */}
       {showAddModal && (
       <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50" onClick={() => setShowAddModal(false)}>
         <div className="bg-white w-[420px] rounded-xl shadow-xl p-6" onClick={(e)=>e.stopPropagation()}>
@@ -242,7 +283,7 @@ export default function DeviceCards() {
       )}
 
 
-      {/* ================= LIST DEVICE, SEARCH BAR, AND FILTER ================= */}
+{/* ================= LIST DEVICE, SEARCH BAR, AND FILTER ================= */}
       <div className="p-6">
         {/* Filter and Search */}
         <div className="flex items-center justify-between bg-white p-4 rounded-2xl shadow-sm border border-gray-200">
@@ -253,7 +294,7 @@ export default function DeviceCards() {
           <select onChange={typeFilterChange} value={filterSearch["type"]} className="px-4 py-2 rounded-lg border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
             <option value="all">All Type</option>
             <option value="sensor">Sensor</option>
-            <option value="aktuator">Actuator</option>
+            <option value="actuator">Actuator</option>
           </select>
 
           {/* Filter : Status */}
@@ -281,9 +322,9 @@ export default function DeviceCards() {
             Apply & Search
           </button>
         </div>
-      </div>
+        </div>
 
-
+        
 
         {/* Device List */}
         <div className="grid grid-cols-1 rounded-2xl  md:grid-cols-5 gap-6 p-6 bg-gray-100">   

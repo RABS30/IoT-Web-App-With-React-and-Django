@@ -68,7 +68,7 @@ def DeviceListView(request, *args):
                 sensor          = data.sensor
                 sensor.status   = body["status"]
                 sensor.save()            
-            if body["type"] == "aktuator":
+            if body["type"] == "actuator":
                 actuator        = data.actuator
                 actuator.status = body["status"]
                 actuator.save()
