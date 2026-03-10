@@ -2,6 +2,7 @@ import os
 from pathlib import Path
 
 from dotenv import load_dotenv
+import paho.mqtt.client as mqtt
 
 load_dotenv()
 
@@ -15,11 +16,23 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv("SECRET_KEY")
 
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+
 ALLOWED_HOSTS = []
 
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+    
+]
+
+
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:5173",
+]
 
 # Application definition
 
@@ -120,15 +133,9 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",
-    
-]
 
-CSRF_TRUSTED_ORIGINS = [
-    "http://localhost:5173",
-]
-
+# Django REST Framework
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': []
 }
+

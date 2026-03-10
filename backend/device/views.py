@@ -53,12 +53,23 @@ def DeviceListView(request, *args):
         
         # New Data
         if body["post"] == "new":
-            newDevice = Device.objects.create(name=body["name"], type=body["type"])
+            newDevice = Device.objects.create(name=body["name"], 
+                                              type=body["type"])
+            
             if body["type"] == "actuator" :
-                sensor = Sensor.objects.get(device__idDevice=body["sensorTarget"])  
-                Actuator.objects.create(device=newDevice, status=body["status"], activation=body["activation"], sensorTarget=sensor, activationValue=body["activationValue"], compararison=body["comparison"])
+                Actuator.objects.create(device=newDevice, 
+                                        status=body["status"], 
+                                        activation=body["activation"], 
+                                        sensorTarget=sensor, 
+                                        activationValue=body["activationValue"], 
+                                        compararison=body["comparison"])
             if body["type"] == "sensor" :
-                Sensor.objects.create(device=newDevice, maxValue=body["maxValue"], threshold=body["threshold"], status=body["status"], measurement=body["measurement"])
+                Sensor.objects.create(device=newDevice, 
+                                      maxValue=body["maxValue"], 
+                                      threshold=body["threshold"], 
+                                      status=body["status"], 
+                                      measurement=body["measurement"], 
+                                      chart=body["chart"])
             
         # Update Status Data
         if body["post"] == "statusUpdate":

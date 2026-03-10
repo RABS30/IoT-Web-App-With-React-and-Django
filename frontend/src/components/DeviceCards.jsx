@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 
 import axios from "axios"; 
 
-import Toast from "./toast";
+import Toast from "./Toast";
 
 export default function DeviceCards() {
 {/* ================= VARIABLE AND STATE ================= */}
@@ -15,6 +15,7 @@ export default function DeviceCards() {
     status  : "all",
     search  : ""
   })
+  
   // On off Pop up
   const [showAddModal, setShowAddModal]   = useState(false)
 
@@ -30,6 +31,7 @@ export default function DeviceCards() {
     maxValue: "",
     threshold: "",
     measurement: "",
+    chart:"",
 
     // actuator fields
     activation: "manual",
@@ -228,6 +230,11 @@ export default function DeviceCards() {
                   <option value="true">On</option>
                   <option value="false">Off</option>
                 </select>
+                <select name="chart" value={newDevice.chart} onChange={handleFormChange} className="border rounded p-2">
+                  <option value="line">Line Chart</option>
+                  <option value="doughnut">Doughnut Chart</option>
+                  <option value="bar">Bar Chart</option>
+                </select>
               </>
             )}
 
@@ -378,6 +385,14 @@ export default function DeviceCards() {
                   Batas aman data :
                   <span className="ml-2 font-medium capitalize">
                     {device.sensor.threshold} {device.sensor.measurement}
+                  </span>
+                </p>
+
+                {/*  Chart Type */}
+                <p className="text-sm mb-2">
+                  Chart :
+                  <span className="ml-2 font-medium capitalize">
+                    {device.sensor.chart} Chart
                   </span>
                 </p>
               </div>

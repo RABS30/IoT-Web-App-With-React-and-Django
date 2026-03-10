@@ -31,6 +31,7 @@ class Sensor(models.Model):
     status      = models.BooleanField(verbose_name="Status Sensor", choices=[(True, "On"), (False, "Off")])
     measurement = models.CharField(verbose_name="Satuan Ukur", max_length=10)
     value       = models.IntegerField(verbose_name="Nilai Sensor", default=0)
+    chart       = models.CharField(verbose_name="Chart Type", max_length=10, choices=(("line", "Line Chart"), ("doughnut", "Doughnut Chart"), ("bar", "Bar Chart")), default="bar")
     
     def save(self, *args, **kwargs):
         if self.device.type != "sensor":
@@ -48,6 +49,7 @@ class Actuator(models.Model):
     sensorTarget    = models.ForeignKey(Sensor, verbose_name="Sensor Target", on_delete=models.CASCADE, null=True, blank=True)
     activationValue = models.IntegerField(verbose_name="Nilai Aktifasi Aktuator", null=True, blank=True)
     compararison    = models.CharField(verbose_name="Perbandingan", max_length=5, choices=[("==", "=="), ("<=", "<="), (">=", ">=")], blank=True, null=True)
+    
     
     
     def save(self, *args, **kwargs):
