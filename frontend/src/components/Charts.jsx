@@ -1,6 +1,5 @@
 // React Components 
 import { useState, useEffect } from "react";
-
 // Charts Components
 import { Line, Doughnut, Bar } from "react-chartjs-2";
 import {
@@ -15,11 +14,11 @@ import {
   Tooltip,
   Legend
 } from "chart.js";
-
-
 // MQTT Client
 import mqtt from "mqtt";
+import axios from "axios";
 
+// Configuration Chart
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -33,11 +32,90 @@ ChartJS.register(
 );
 
 
-const broker         = "wss://broker.emqx.io:8084/mqtt" 
-const frontendTopic  = "monitoring/frontend"
-
 
 export default function Charts() {
+  
+// ===== Variable and Data =====
+  // MQTT Variable 
+  const broker         = "wss://broker.emqx.io:8084/mqtt" 
+  const frontendTopic  = "monitoring/frontend"  
+  // Device List
+  const [Device , setDevice] = useState(
+      [
+        
+        
+        
+        
+{
+  actuator: null,
+  id: 1,
+  idDevice: "KC5D1TK2O8",
+  name: "Sensor Suhu",
+  sensor : {
+    chart: "doughnut",
+    device: "Sensor Suhu",
+    id: 1,
+    maxValue: 100,
+    measurement: "Celcius",
+    status: true ,
+    threshold: 50,
+    type : "sensor"}}
+      ]
+  )
+
+  // Message from MQTT
+  // const [message , setMessage] = useState(
+  //     [
+  //         {
+  //             "id"   : "1",
+  //             "name" : "Sensor 1",
+  //             "data" : 50,
+  //             "chart": "doughnut"
+  //         },
+  //         {
+  //             "id"   : "2",
+  //             "name" : "Sensor 2",
+  //             "data" : 50,
+  //             "chart": "bar"
+  //         },
+  //         {
+  //             "id"   : "3",
+  //             "name" : "Sensor 3",
+  //             "data" : 50,
+  //             "chart": "bar"
+  //         },
+  //         {
+  //             "id"   : "4",
+  //             "name" : "Sensor 1",
+  //             "data" : 50,
+  //             "chart": "doughnut"
+  //         },
+  //         {
+  //             "id"   : "5",
+  //             "name" : "Sensor 2",
+  //             "data" : 50,
+  //             "chart": "bar"
+  //         }
+
+  //     ]
+  // )
+
+  
+// ===== REST API =====
+  // GET = > Get data device from Django
+  useEffect(() => {
+    axios.get("http://127.0.0.1:8000/device/sensor/")
+    .then((response) => {
+      setDevice(response.data)
+      console.log(response.data)
+    })
+    .catch((response) => {
+      console.log("error : ", response)
+    })
+  },[])
+
+
+// ===== Chart Settings =====
   // Doughnut Options
   const chartOptions = {
     responsive: true,
@@ -66,42 +144,7 @@ export default function Charts() {
     }
   }
 
-  // Message from MQTT
-  const [message , setMessage] = useState([
-        {
-            "id"   : "1",
-            "name" : "Sensor 1",
-            "data" : 50,
-            "chart": "doughnut"
-        },
-        {
-            "id"   : "2",
-            "name" : "Sensor 2",
-            "data" : 50,
-            "chart": "bar"
-        },
-        {
-            "id"   : "3",
-            "name" : "Sensor 3",
-            "data" : 50,
-            "chart": "bar"
-        },
-        {
-            "id"   : "4",
-            "name" : "Sensor 1",
-            "data" : 50,
-            "chart": "doughnut"
-        },
-        {
-            "id"   : "5",
-            "name" : "Sensor 2",
-            "data" : 50,
-            "chart": "bar"
-        }
-
-    ]
-)
-
+  
   // Connect to MQTT
   useEffect(() => {
     // Hubungkan MQTT
@@ -132,8 +175,8 @@ export default function Charts() {
 
 
 
-
-  if(message != null){
+// ===== HTML Components =====
+  if(Device != null){
     return (
         <>
           <div className="p-6">
@@ -142,7 +185,7 @@ export default function Charts() {
 
               <div className="grid grid-cols-1 md:grid-cols-5 gap-6 p-6 bg-gray-100 h-auto">
                   {/* === Card Sensor Chart === */}
-                  {message.map((data) => (
+                  {Device.map((data) => (
                       <div key={data.id} className="bg-white p-4 rounded-xl shadow-md aspect-square flex flex-col">
                         {/* === Nama Sensor === */}
                         <h2 className="text-lg font-semibold mb-3">
@@ -153,14 +196,14 @@ export default function Charts() {
                         <div className="h-full w-full">
 
                           {/* === LINE === */}
-                          {data.chart === "line" && (
+                          {data.sensor.chart === "line" && (
                             <Line
                               data={{
                                 labels: ["Jan"],
                                 datasets: [
                                   {
                                     label: data.name,
-                                    data: data.data,
+                                    data: [50, 100],
                                     borderColor: "#3b82f6",
                                     backgroundColor: "#3b82f6"
                                   }
@@ -171,13 +214,13 @@ export default function Charts() {
                           )}
 
                           {/* DOUGHNUT */}
-                          {data.chart === "doughnut" && (
+                          {data.sensor.chart === "doughnut" && (
                             <Doughnut
                               data={{
-                                labels: [data.data, ""],
+                                labels: [50, ""],
                                 datasets: [
                                   {
-                                    data: [data.data, 100 - data.data],
+                                    data: [50, 100 - 50],
                                     backgroundColor: data.data < 70 ? ["#10b981", "#e5e7eb"] : ["#c60000", "#e5e7eb"] 
                                   }
                                 ]
@@ -187,15 +230,15 @@ export default function Charts() {
                           )}
 
                           {/* BAR */}
-                          {data.chart === "bar" && (
+                          {data.sensor.chart === "bar" && (
                             <Bar
                               data={{
-                                labels: [data.data],
+                                labels: [50],
                                 datasets: [
                                   {
                                     label: data.name,
-                                    data: [data.data],
-                                    backgroundColor: data.data < 50 ? ["#6366f1"] : ["#ce0101"]
+                                    data: [50],
+                                    backgroundColor: 50 < 50 ? ["#6366f1"] : ["#ce0101"]
                                     
                                   }
                                 ]

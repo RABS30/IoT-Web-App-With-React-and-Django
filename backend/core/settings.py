@@ -37,6 +37,7 @@ CSRF_TRUSTED_ORIGINS = [
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -78,6 +79,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'core.wsgi.application'
+ASGI_APPLICATION = 'core.asgi.application'
 
 
 # Database
@@ -138,4 +140,15 @@ STATIC_URL = 'static/'
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': []
 }
+
+# Channels Django
+CHANNEL_LAYERS = {
+    "default" : {
+        "BACKEND"   : "channels_redis.core.RedisChannelLayer",
+        "CONFIG"    : {
+            "hosts"     : [("127.0.0.1", 6379)]   
+        } 
+    }
+} 
+
 

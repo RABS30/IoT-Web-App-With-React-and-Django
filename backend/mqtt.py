@@ -46,46 +46,28 @@ time.sleep(5)
 while True:
     message = [
         {
-            "id"   : "1",
-            "name" : "Sensor 1",
-            "data" : random.randint(10, 100),
-            "date" : str(datetime.datetime.today()),
-            "chart": "doughnut"
+            "id"   : "1NG9TNWSW86",
+            "data"  : random.randint(10, 100)
         },
         {
-            "id"   : "2",
-            "name" : "Sensor 2",
-            "data" : random.randint(10, 100),
-            "date" : str(datetime.datetime.today()),
-            "chart": "bar"
+            "id"   : "	A093GWIAMP",
+            "chart": random.randint(10, 100)
         },
         {
-            "id"   : "3",
-            "name" : "Sensor 3",
-            "data" : random.randint(10, 100),
-            "date" : str(datetime.datetime.today()),
-            "chart": "bar"
+            "id"   : "UMQ7CZIKEC",
+            "chart": random.randint(10, 100)
         },
         {
-            "id"   : "4",
-            "name" : "Sensor 1",
-            "data" : random.randint(10, 100),
-            "date" : str(datetime.datetime.today()),
-            "chart": "doughnut"
+            "id"   : "3IFNFPR9TQ",
+            "chart": random.randint(10, 100)
         },
         {
-            "id"   : "5",
-            "name" : "Sensor 2",
-            "data" : random.randint(10, 100),
-            "date" : str(datetime.datetime.today()),
-            "chart": "bar"
+            "id"   : "Z6GQM7NFPJ",
+            "chart": random.randint(10, 100)
         },
         {
-            "id"   : "6",
-            "name" : "Sensor 3",
-            "data" : random.randint(10, 100),
-            "date" : str(datetime.datetime.today()),
-            "chart": "bar"
+            "id"   : "6VLSODF9GD",
+            "chart": random.randint(10, 100)
         },
 
     ]

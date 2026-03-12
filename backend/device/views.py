@@ -89,3 +89,37 @@ def DeviceListView(request, *args):
         dataDeviceSerializers = DeviceSerializers(dataDevice, many=True)           
 
         return JsonResponse(dataDeviceSerializers.data, status=200, safe=False)
+
+
+def TypeListView(request, type, *args):
+    if request.method == "GET":
+        try :
+            DeviceFilter = Device.objects.all().filter(type=type)
+        except :
+            raise Device.DoesNotExist
+        
+        print(DeviceFilter)
+        DeviceFilter = DeviceSerializers(DeviceFilter, many=True)
+        
+        return JsonResponse(DeviceFilter.data , safe=False)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

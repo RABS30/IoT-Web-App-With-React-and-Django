@@ -15,15 +15,26 @@ export default function DeviceCards() {
     status  : "all",
     search  : ""
   })
-  
+
   // On off Pop up
   const [showAddModal, setShowAddModal]   = useState(false)
 
-  // default data for new device
+  // Turn on/off notification
+  const [toast, setToast] = useState(false)
+
+  // Message for notification
+  const [messageToast, setMessageToast] = useState({
+    type    :"",
+    status  :"",
+    message :""
+  })
+
+  // Data for new device
   const [newDevice, setNewDevice] = useState({
-    post: "new",
+    post  : "new",
     status: true,
 
+    // Device fields
     name: "",
     type: "sensor",
 
@@ -38,16 +49,6 @@ export default function DeviceCards() {
     comparison: ">",
     sensorTarget: "",
     activationValue: 0
-  })
-
-  // Turn on/off notification
-  const [toast, setToast] = useState(false)
-
-  // Message for notification
-  const [messageToast, setMessageToast] = useState({
-    type    :"",
-    status  :"",
-    message :""
   })
 
 {/* ================= GET API FIRST TIME ================= */}

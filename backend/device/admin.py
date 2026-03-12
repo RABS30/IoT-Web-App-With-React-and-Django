@@ -1,6 +1,11 @@
 from django.contrib import admin
+from .models import Device, Sensor, ValueSensor, Actuator 
+
+class DeviceModels(admin.ModelAdmin):
+    list_display    = ("idDevice", "name", "type")
+    list_filter     = ("name", "type", "idDevice")
+    search_fields   = ("name", "type", "idDevice")
 
 
-from .models import Device, Sensor, Actuator 
-# Register your models here.
-admin.site.register([Device, Sensor, Actuator])
+admin.site.register(Device, DeviceModels)
+admin.site.register([Sensor, ValueSensor, Actuator])

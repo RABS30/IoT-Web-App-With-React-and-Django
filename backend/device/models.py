@@ -30,7 +30,6 @@ class Sensor(models.Model):
     threshold   = models.IntegerField(verbose_name="Nilai ambang batas")
     status      = models.BooleanField(verbose_name="Status Sensor", choices=[(True, "On"), (False, "Off")])
     measurement = models.CharField(verbose_name="Satuan Ukur", max_length=10)
-    value       = models.IntegerField(verbose_name="Nilai Sensor", default=0)
     chart       = models.CharField(verbose_name="Chart Type", max_length=10, choices=(("line", "Line Chart"), ("doughnut", "Doughnut Chart"), ("bar", "Bar Chart")), default="bar")
     
     def save(self, *args, **kwargs):
@@ -42,6 +41,14 @@ class Sensor(models.Model):
     def __str__(self):
         return f"{self.device}"
 
+class ValueSensor(models.Model):
+    device  = models.ForeignKey(Device, verbose_name="Device", on_delete=models.CASCADE, limit_choices_to={"type": "sensor"}, related_name="value", to_field="name")
+    value   = models.IntegerField(verbose_name="Value Sensor", default=0)
+    
+    
+    def __str__(self):
+        return f"{self.device} = {self.value}"
+              
 class Actuator(models.Model):
     device          = models.OneToOneField(Device, verbose_name= "Device", on_delete=models.CASCADE, limit_choices_to={'type': 'actuator'}, related_name='actuator', to_field="name")
     status          = models.BooleanField(verbose_name="Status Aktuator", choices=[(True, "On"), (False, "Off")])
