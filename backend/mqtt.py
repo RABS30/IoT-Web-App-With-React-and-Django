@@ -44,33 +44,38 @@ client.loop_start()
 time.sleep(5)
 
 while True:
-    message = [
-        {
-            "id"   : "1NG9TNWSW86",
-            "data"  : random.randint(10, 100)
-        },
-        {
-            "id"   : "	A093GWIAMP",
-            "chart": random.randint(10, 100)
-        },
-        {
-            "id"   : "UMQ7CZIKEC",
-            "chart": random.randint(10, 100)
-        },
-        {
-            "id"   : "3IFNFPR9TQ",
-            "chart": random.randint(10, 100)
-        },
-        {
-            "id"   : "Z6GQM7NFPJ",
-            "chart": random.randint(10, 100)
-        },
-        {
-            "id"   : "6VLSODF9GD",
-            "chart": random.randint(10, 100)
-        },
-
-    ]
+    message = {
+            'type' : 'latest_data',
+            'data' : [{
+                    "id"   : "3CWE7YE4CK",
+                    "data" : random.randint(10, 100)
+                },
+                {
+                    "id"    : "NG9TNWSW86",
+                    "data"  : random.randint(10, 100)
+                },
+                {
+                    "id"    : "A093GWIAMP",
+                    "data"  : random.randint(10, 100)
+                },
+                {
+                    "id"    : "6VLSODF9GD",
+                    "data"  : random.randint(10, 100)
+                },
+                {
+                    "id"    : "42UFEZ6E02",
+                    "data"  : random.randint(10, 100)
+                },
+                {
+                    "id"   : "KC5D1TK2O8",
+                    "data" : random.randint(10, 100)
+                },
+                {
+                    "id"   : "2ZDHC0NP5Q",
+                    "data" : random.randint(10, 100)
+                },
+                ]
+        }
 
     if client.is_connected() :
         # Mengirim data ke topic

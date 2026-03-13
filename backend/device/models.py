@@ -45,6 +45,12 @@ class ValueSensor(models.Model):
     device  = models.ForeignKey(Device, verbose_name="Device", on_delete=models.CASCADE, limit_choices_to={"type": "sensor"}, related_name="value", to_field="name")
     value   = models.IntegerField(verbose_name="Value Sensor", default=0)
     
+# ======================= SETUP MQTT =======================
+    def save(self, *args, **kwargs):
+        if self.device.type == "sensor":
+            return super().save(*args, **kwargs)    
+        raise ValueError("Type device must sensor")
+
     
     def __str__(self):
         return f"{self.device} = {self.value}"

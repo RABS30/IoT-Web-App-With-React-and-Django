@@ -6,8 +6,7 @@ import SummaryChart from "./components/SummaryChart";
 import Navbar from "./components/Navbar";
 import Dashboard from "./pages/Dashboard";
 import DeviceSettings from "./pages/DeviceSettings";
-
-
+import Websocket from "./components/Websocket";
 
 
 function AccountSettings() {
@@ -20,7 +19,7 @@ function App() {
       <Navbar />
       <Routes>
         <Route path="/"         element={<Dashboard />} />
-        <Route path="/account"  element={<AccountSettings />} />
+        <Route path="/account"  element={<Websocket />} />
         <Route path="/device"   element={<DeviceSettings />} />
       </Routes>
     </Router>

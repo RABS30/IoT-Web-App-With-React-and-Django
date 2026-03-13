@@ -27,7 +27,7 @@ export default function Toast({ toast, setToast, type = "success", status, messa
           setToast(false);
         }, 300);
 
-      }, 2500);
+      }, 250);
 
       return () => clearTimeout(timer);
     }

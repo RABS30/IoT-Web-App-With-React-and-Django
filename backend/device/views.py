@@ -98,7 +98,6 @@ def TypeListView(request, type, *args):
         except :
             raise Device.DoesNotExist
         
-        print(DeviceFilter)
         DeviceFilter = DeviceSerializers(DeviceFilter, many=True)
         
         return JsonResponse(DeviceFilter.data , safe=False)
