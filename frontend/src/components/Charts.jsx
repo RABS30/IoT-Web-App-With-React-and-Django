@@ -24,35 +24,6 @@ ChartJS.register(
   Legend
 );
 
-// Doughnut Options
-const chartOptions = {
-responsive: true,
-maintainAspectRatio: false,
-plugins: {
-    legend: {
-    position: "top"
-    }
-}
-};
-
-// Bar Options
-const barChartsOption = {
-responsive: true,
-maintainAspectRatio: false,
-plugins: {
-    legend: {
-    position: "top"
-    }
-},
-scales: {
-    y: {
-    beginAtZero: true,
-    max: 100
-    }
-}
-}
-
-
 
 import SensorConfig from "./hooks/SensorConfig";
 import SensorLatestData from "./hooks/SensorLatestData";
@@ -82,7 +53,7 @@ export default function Charts(){
                       <div key={data.id} className="bg-white p-4 rounded-xl shadow-md aspect-square flex flex-col">
                         {/* === Nama Sensor === */}
                         <h2 className="text-lg font-semibold mb-3">
-                          {data.name} {latestData?.[data.idDevice] ?? ''}
+                          {data.name}
                         </h2>
 
                         {/* === Wrapper dengan tinggi tetap === */}
@@ -118,7 +89,14 @@ export default function Charts(){
                                   }
                                 ]
                               }}
-                              options={chartOptions}
+                              options={{                              
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                plugins: {
+                                    legend: {
+                                    position: "top"
+                                    }}
+                              }}
                             />
                           )}
 
@@ -136,7 +114,21 @@ export default function Charts(){
                                   }
                                 ]
                               }}
-                              options={barChartsOption}
+                              options={{
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                plugins: {
+                                    legend: {
+                                    position: "top"
+                                    }
+                                },
+                                scales: {
+                                    y: {
+                                    beginAtZero: true,
+                                    max: data.sensor.maxValue
+                                    }
+                                }
+                                }}
                             />
                           )}
 
