@@ -5,9 +5,9 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
   const menuItems = [
-    { name: "Dashboard", path: "/" },
-    { name: "Device Settings", path: "/device" },
-    { name: "Account Settings", path: "/account" },
+    { name: "Dashboard",  path: "/" },
+    { name: "Device",     path: "/device" },
+    { name: "My Account", path: "/account" },
   ];
 
   const linkBaseStyle =
@@ -24,7 +24,7 @@ export default function Navbar() {
       <div className="w-full px-6 py-4 flex items-center">
         
         <h1 className="text-xl font-bold">
-          Dashboard Monitoring Sensor
+          Dashboard Monitoring
         </h1>
 
         {/* Desktop */}

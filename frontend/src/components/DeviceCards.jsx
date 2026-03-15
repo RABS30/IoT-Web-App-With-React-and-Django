@@ -72,7 +72,21 @@ export default function DeviceCards() {
   }, [])
 
 {/* ================= REST API  ================= */}
-  // POST = Turn On/Off status Device
+  // GET = Get data filter and search
+  const filterButtonClicked = () => {
+    axios.get("http://127.0.0.1:8000/device/", {
+      params: filterSearch
+    })
+    .then((res) => {
+      setDevices(res.data)
+      setFilterSearch({...filterSearch, search: ""})
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+  }  
+
+// POST = Turn On/Off status Device
   const onOffButtonClicked = (idDevice, type, status) => {
     axios.post("http://127.0.0.1:8000/device/", {
       post: "statusUpdate",
@@ -141,7 +155,6 @@ export default function DeviceCards() {
   // Filter = Status
   const statusFilterChange = (e) => {
     setFilterSearch({...filterSearch, status: e.target.value})
-    
   }
 
   // Filter = Search
@@ -149,19 +162,7 @@ export default function DeviceCards() {
     setFilterSearch({...filterSearch, search: e.target.value})
   }
   
-  // Run Filter
-  const filterButtonClicked = () => {
-    axios.get("http://127.0.0.1:8000/device/", {
-      params: filterSearch
-    })
-    .then((res) => {
-      setDevices(res.data)
-      setFilterSearch({...filterSearch, search: ""})
-    })
-    .catch((err) => {
-      console.log(err)
-    })
-  }
+
 
   // Change Color on device cards
   const getStatusColor = (status) => {
@@ -200,8 +201,10 @@ export default function DeviceCards() {
 
   return (
     <>
-
+{/* ================= TOAST ALERT ================= */}
       <Toast toast={toast} setToast={setToast} type={messageToast["type"]} status={messageToast["status"]} message={messageToast["message"]}/>
+
+
 {/* ================= POP UP ADD NEW DEVICE ================= */}
       {showAddModal && (
       <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50" onClick={() => setShowAddModal(false)}>
@@ -291,7 +294,7 @@ export default function DeviceCards() {
       )}
 
 
-{/* ================= LIST DEVICE, SEARCH BAR, AND FILTER ================= */}
+{/* ================= SEARCH BAR, AND FILTER ================= */}
       <div className="p-6">
         {/* Filter and Search */}
         <div className="flex items-center justify-between bg-white p-4 rounded-2xl shadow-sm border border-gray-200">
@@ -330,11 +333,11 @@ export default function DeviceCards() {
             Apply & Search
           </button>
         </div>
-        </div>
+      </div>
 
         
 
-        {/* Device List */}
+{/* ================= DEVICE LIST ================= */}
         <div className="grid grid-cols-1 rounded-2xl  md:grid-cols-5 gap-6 p-6 bg-gray-100">   
           {devices.map((device) => (
             device.type === "sensor" ?
@@ -346,7 +349,7 @@ export default function DeviceCards() {
                   <h2 className="text-lg font-semibold">
                     {device.name}
                   </h2>
-                  <span className={`w-3 h-3 rounded-full ${getStatusColor(device.sensor.status)}`}></span>
+                  <span className={`w-3 h-3 rounded-full ${getStatusColor(device.status_sensor)}`}></span>
                 </div>
 
                 {/* ID */}
@@ -369,7 +372,7 @@ export default function DeviceCards() {
                 <p className="text-sm mb-2">
                   Status:
                   <span className="ml-2 font-medium capitalize">
-                    {device.sensor.status ? "On" : "Off"}
+                    {device.status_sensor ? "On" : "Off"}
                   </span>
                 </p>
 
@@ -377,7 +380,7 @@ export default function DeviceCards() {
                 <p className="text-sm mb-2">
                   Nilai maks data :
                   <span className="ml-2 font-medium capitalize">
-                    {device.sensor.maxValue} {device.sensor.measurement}
+                    {device.maxValue} {device.measurement}
                   </span>
                 </p>
 
@@ -385,7 +388,7 @@ export default function DeviceCards() {
                 <p className="text-sm mb-2">
                   Batas aman data :
                   <span className="ml-2 font-medium capitalize">
-                    {device.sensor.threshold} {device.sensor.measurement}
+                    {device.threshold} {device.measurement}
                   </span>
                 </p>
 
@@ -393,15 +396,15 @@ export default function DeviceCards() {
                 <p className="text-sm mb-2">
                   Chart :
                   <span className="ml-2 font-medium capitalize">
-                    {device.sensor.chart} Chart
+                    {device.chart} Chart
                   </span>
                 </p>
               </div>
                 {/* BUTTON AREA */}
                 <div className="flex gap-3 mt-6">
                   {/* On Off Button */}
-                  <button  onClick={() => onOffButtonClicked(device.idDevice, device.type, device.sensor.status)}  className={`flex-1 py-2 rounded-lg text-sm font-semibold text-white transition ${device.sensor.status ? "bg-red-600 hover:bg-red-700" : "bg-green-600 hover:bg-green-700"}`}>
-                    {device.sensor.status ? "Turn OFF" : "Turn ON"}
+                  <button  onClick={() => onOffButtonClicked(device.idDevice, device.type, device.status_sensor)}  className={`flex-1 py-2 rounded-lg text-sm font-semibold text-white transition ${device.status_sensor ? "bg-red-600 hover:bg-red-700" : "bg-green-600 hover:bg-green-700"}`}>
+                    {device.status_sensor ? "Turn OFF" : "Turn ON"}
                   </button>
                   {/* Edit Button */}
                   <button className="flex-1 py-2 rounded-lg text-sm font-semibold bg-blue-600 hover:bg-blue-700 text-white transition">
@@ -411,14 +414,14 @@ export default function DeviceCards() {
             </div> 
             : 
             // Actuator Cards
-            <div key={device.id} className="bg-white p-6 rounded-2xl shadow-md flex flex-col justify-between">  
+            <div key={device.idDevice} className="bg-white p-6 rounded-2xl shadow-md flex flex-col justify-between">  
               <div>
                 {/* Nama dan status color */}
                 <div className="flex justify-between items-center mb-4">             
                   <h2 className="text-lg font-semibold">
                     {device.name}
                   </h2>
-                  <span className={`w-3 h-3 rounded-full ${getStatusColor(device.actuator.status)}`}></span>
+                  <span className={`w-3 h-3 rounded-full ${getStatusColor(device.status_actuator)}`}></span>
                 </div>
 
                 {/* ID */}
@@ -441,7 +444,7 @@ export default function DeviceCards() {
                 <p className="text-sm mb-2">
                   Status:
                   <span className="ml-2 font-medium capitalize">
-                    {device.actuator.status ?  "On" : "Off"}
+                    {device.status_actuator ?  "On" : "Off"}
                   </span>
                 </p>
 
@@ -449,16 +452,16 @@ export default function DeviceCards() {
                 <p className="text-sm mb-2">
                   Aktifasi Aktuator :
                   <span className="ml-2 font-medium capitalize">
-                    {device.actuator.compararison} {device.actuator.activation}
+                    {device.compararison} {device.activation}
                   </span>
                 </p>
 
                 {/* Jenis Aktifasi Aktuator */}
-                {device.actuator.activation === "sensor" && <>
+                {device.activation === "sensor" && <>
                   <p className="text-sm mb-4">
                     Sensor Target :
                     <span className="ml-2 font-medium">
-                      {device.actuator.sensorTarget.device} 
+                      {device.sensorTarget.device} 
                     </span>
                   </p>
                 </>}
@@ -466,10 +469,9 @@ export default function DeviceCards() {
 
                 {/* BUTTON AREA */}
                 <div className="flex gap-3 mt-6">
-
                   {/* On Off Button */}
-                  <button onClick={() => onOffButtonClicked(device.idDevice, device.type, device.actuator.status)} className={`flex-1 py-2 rounded-lg text-sm font-semibold text-white transition ${device.actuator.status ? "bg-red-600 hover:bg-red-700" : "bg-green-600 hover:bg-green-700"}`}>
-                    {device.actuator.status ? "Turn OFF": "Turn ON"}
+                  <button onClick={() => onOffButtonClicked(device.idDevice, device.type, device.status_actuator)} className={`flex-1 py-2 rounded-lg text-sm font-semibold text-white transition ${device.status_actuator ? "bg-red-600 hover:bg-red-700" : "bg-green-600 hover:bg-green-700"}`}>
+                    {device.status_actuator ? "Turn OFF": "Turn ON"}
                   </button>
 
                   {/* Edit Button */}

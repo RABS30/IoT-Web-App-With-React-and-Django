@@ -1,66 +1,19 @@
-import { useState } from "react";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import ActuatorDevice from "./hooks/ActuatorDevice";
+
 
 export default function DeviceStatus() {
-  const [devices, setDevices] = useState([
-    {
-      id: 1,
-      name: "Temperature Sensor",
-      status: "online",
-      power: true,
-      lastSeen: "2026-02-27 10:45:22",
-      rssi: -65,
-      battery: 78
-    },
-    {
-      id: 2,
-      name: "Water Pump",
-      status: "offline",
-      power: false,
-      lastSeen: "2026-02-27 09:12:10",
-      rssi: -90,
-      battery: 20
-    },
-    {
-      id: 3,
-      name: "Water Pump",
-      status: "offline",
-      power: false,
-      lastSeen: "2026-02-27 09:12:10",
-      rssi: -90,
-      battery: 20
-    },
-    {
-      id: 4,
-      name: "Water Pump",
-      status: "offline",
-      power: false,
-      lastSeen: "2026-02-27 09:12:10",
-      rssi: -90,
-      battery: 20
-    },
-    {
-      id: 5,
-      name: "Water Pump",
-      status: "offline",
-      power: false,
-      lastSeen: "2026-02-27 09:12:10",
-      rssi: -90,
-      battery: 20
-    }
-  ]);
+  // Get actuator device
+  const actuator = ActuatorDevice()
 
   // 🔥 Toggle Power
   const togglePower = (id) => {
     setDevices((prev) =>
       prev.map((device) =>
-        device.id === id
-          ? { ...device, power: !device.power }
-          : device
+        device.idDevice === id ? { ...device, status_actuator: !device.status_actuator } : device
       )
     );
-
-    // 🔥 Di sini nanti publish MQTT
-    console.log("Publish MQTT control...");
   };
 
   const getStatusColor = (status) => {
@@ -76,78 +29,78 @@ export default function DeviceStatus() {
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-5 gap-6 p-6 bg-gray-100">
-      {devices.map((device) => (
-        <div key={device.id} className="bg-white p-6 rounded-2xl shadow-md flex flex-col justify-between">
-          {/* Header */}
-          <div>
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-lg font-semibold">
-                {device.name}
-              </h2>
+  <div className="p-3 sm:p-4 md:p-6">
+    <div className="bg-white shadow rounded-xl p-3 sm:p-4">
+      <h2 className="text-sm sm:text-base md:text-lg font-semibold mb-4">
+        Aktuator 
+      </h2>
+      
+      <div className="grid grid-cols-1 md:grid-cols-5 gap-6 p-6 bg-gray-100">
+        {actuator?.map((device) => (
+          <div key={device.idDevice} className="bg-white p-6 rounded-2xl shadow-md flex flex-col justify-between">
+            {/* Header */}
+            <div>
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-lg font-semibold">
+                  {device.name}
+                </h2>
 
-              <span
-                className={`w-3 h-3 rounded-full ${getStatusColor(
-                  device.status
-                )}`}
-              ></span>
-            </div>
-
-            <p className="text-sm mb-2">
-              Status:
-              <span className="ml-2 font-medium capitalize">
-                {device.status}
-              </span>
-            </p>
-
-            <p className="text-sm mb-2">
-              Last Seen:
-              <span className="ml-2 text-gray-500">
-                {device.lastSeen}
-              </span>
-            </p>
-
-            <p className="text-sm mb-4">
-              RSSI:
-              <span className="ml-2 font-medium">
-                {device.rssi} dBm
-              </span>
-            </p>
-
-            {/* Battery */}
-            <div className="mb-4">
-              <p className="text-sm mb-1">Battery</p>
-              <div className="w-full bg-gray-200 h-3 rounded-full">
-                <div
-                  className={`h-3 rounded-full ${getBatteryColor(
-                    device.battery
+                <span
+                  className={`w-3 h-3 rounded-full ${getStatusColor(
+                    device.status_actuator
                   )}`}
-                  style={{ width: `${device.battery}%` }}
-                ></div>
+                ></span>
               </div>
-              <p className="text-xs text-right mt-1">
-                {device.battery}%
+
+              <p className="text-sm mb-2">
+                Status:
+                <span className="ml-2 font-medium capitalize">
+                  {device.status_actuator ? 'On' : 'Off'} 
+                </span>
+              </p>
+
+              <p className="text-sm mb-4">
+                Aktivasi Actuator:
+                <span className="ml-2 font-medium">
+                  { device.activation === "manual" ? "Manual" : "Sensor"} 
+                </span>
+              </p>
+
+              <p className="text-sm mb-4">
+                Last Active:
+                <span className="ml-2 font-medium">
+                  { device.last_activation ? device.last_activation : "Not Active"} 
+                </span>
+              </p>
+
+              <p className="text-sm mb-4">
+                Sensor Target :
+                <span className="ml-2 font-medium">
+                  { device.activation === "manual" ? "Manual" : `${device.sensorTarget} ${device.id_sensor}`} 
+                </span>
               </p>
             </div>
-          </div>
 
-          {/* 🔥 Power Button */}
-          <button
-            onClick={() => togglePower(device.id)}
-            disabled={device.status === "offline"}
-            className={`mt-4 py-2 rounded-xl font-semibold text-white transition ${
-              device.power
-                ? "bg-green-600 hover:bg-green-700"
-                : "bg-gray-500 hover:bg-gray-600"
-            } ${
-              device.status === "offline" &&
-              "opacity-50 cursor-not-allowed"
-            }`}
-          >
-            {device.power ? "Turn OFF" : "Turn ON"}
-          </button>
-        </div>
-      ))}
+            {/* 🔥 Power Button */}
+            <button
+              onClick={() => togglePower(device.idDevice)}
+              disabled={device.status === "offline"}
+              className={`mt-4 py-2 rounded-xl font-semibold text-white transition ${
+                device.power
+                  ? "bg-green-600 hover:bg-green-700"
+                  : "bg-gray-500 hover:bg-gray-600"
+              } ${
+                device.status === "offline" &&
+                "opacity-50 cursor-not-allowed"
+              }`}
+            >
+              {device.status_actuator ? "Turn OFF" : "Turn ON"}
+            </button>
+          </div>
+        ))}
+      </div>
+      
     </div>
+  </div>
   );
 }

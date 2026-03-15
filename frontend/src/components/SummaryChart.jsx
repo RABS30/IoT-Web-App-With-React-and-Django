@@ -35,7 +35,14 @@ export default function SummaryChart() {
 
   return (
     <>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-6 bg-white h-auto">
+
+  <div className="p-3 sm:p-4 md:p-6">
+      <div className="bg-white shadow rounded-xl p-3 sm:p-4">
+        <h2 className="text-sm sm:text-base md:text-lg font-semibold mb-4">
+          Summary
+        </h2>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-6 bg-gray-100 h-auto">
         <div className="p-6">
           <div className="bg-white shadow rounded-xl p-4">
             <div className="flex justify-between mb-4">
@@ -95,6 +102,8 @@ export default function SummaryChart() {
       
       
       </div>
+    </div>
+    </div>
 
      
     </>

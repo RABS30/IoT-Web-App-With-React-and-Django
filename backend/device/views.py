@@ -8,7 +8,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
 from .models import Device, Actuator, Sensor
-from .serializers import SensorSerializers, DeviceSerializers
+from .serializers import SensorSerializers, DeviceSerializers, ActuatorSerializers
 
 
 @csrf_exempt
@@ -93,16 +93,13 @@ def DeviceListView(request, *args):
 
 def TypeListView(request, type, *args):
     if request.method == "GET":
-        try :
-            DeviceFilter = Device.objects.all().filter(type=type)
-        except :
-            raise Device.DoesNotExist
+        deviceList = Device.objects.select_related(
+            'actuator',
+            'sensor',
+        ).filter(type=type)
         
-        DeviceFilter = DeviceSerializers(DeviceFilter, many=True)
-        
-        return JsonResponse(DeviceFilter.data , safe=False)
-
-
+        deviceList   = DeviceSerializers(deviceList, read_only=True, many=True)
+        return JsonResponse(deviceList.data, safe=False)
 
 
 

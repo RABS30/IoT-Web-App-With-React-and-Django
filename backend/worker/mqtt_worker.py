@@ -2,82 +2,101 @@ import os
 import sys
 import json
 import django
+import asyncio
 import threading
 import paho.mqtt.client as mqtt
-# Redis library
+
 from redis_worker import redis_client
-# websocket library
-import asyncio
 from channels.layers import get_channel_layer
 
-# ===================== MQTT VARIABLE CONFIG ========================
-MQTT_SERVER     = "broker.emqx.io"
-MQTT_PORT       = 1883
-MQTT_KEEPALIVE  = 60
-MQTT_SUBSCRIBE  = "monitoring/backend"
+# ===================== MQTT CONFIG =====================
+MQTT_SERVER = "broker.emqx.io"
+MQTT_PORT = 1883
+MQTT_KEEPALIVE = 60
+MQTT_SUBSCRIBE = "monitoring/backend"
 
-
-# ===================== SETTING ROOT PROJECT ========================
+# ===================== DJANGO SETUP =====================
 project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, project_root)
+
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "core.settings")
 django.setup()
-# import database django
+
 from device import models
 
+channel_layer = get_channel_layer()
 
-# ======================= WEBSOCKET CHANNELS =======================
-# Send latest data to channels from redis 
+# ===================== WEBSOCKET BROADCAST =====================
+
 async def broadcast_latest_data():
-    while True :
-        print('send data')
-        await get_channel_layer().group_send(
-            "latest_data",
-            {
-                "type": "latest_data",
-                "data": redis_client.hgetall('latest_data')
-            }
-        )
+    while True:
+        try:
+            data = redis_client.hgetall("latest_data")
+
+            await channel_layer.group_send(
+                "latest_data",
+                {
+                    "type": "latest_data",
+                    "data": data
+                }
+            )
+
+        except Exception as e:
+            print("Broadcast error:", e)
 
         await asyncio.sleep(1)
 
+# ===================== MQTT CALLBACK =====================
 
-# ======================= CALLBACK MQTT =======================
-# Callback = Saat MQTT Terhubung
-def on_connect(client, userdata, flags, reasoncode):
+def on_connect(client, userdata, flags, reasoncode, properties=None):
     if reasoncode == 0:
         print("MQTT Connected")
         client.subscribe(MQTT_SUBSCRIBE)
     else:
-        print("MQTT Connect failed:", reasoncode)      
-        
-# Callback = Saat menerima message dari MQTT
-def on_message(client, userdata, message):
-    data = message.payload.decode()
-    data = json.loads(data)
-    
-    # Push data to redis and database
-    if data['type'] == 'latest_data' :
-        for sensor in data['data']:
-            # push to redis
-            redis_client.hset("latest_data", sensor['id'], sensor['data'])
-            # push to database
-            device = models.Device.objects.get(idDevice=sensor["id"])
-            models.ValueSensor.objects.create(device=device, value=int(sensor["data"]))
-    
-    
+        print("MQTT Connect failed:", reasoncode)
 
-        
-# ======================= SETUP MQTT =======================
-    # Buat object mqtt dan masukkan callback ke mqtt
+
+def on_message(client, userdata, message):
+    try:
+        payload = json.loads(message.payload.decode())
+
+        if payload["type"] == "latest_data":
+
+            for sensor in payload["data"]:
+
+                # push redis
+                redis_client.hset(
+                    "latest_data",
+                    sensor["id"],
+                    sensor["data"]
+                )
+
+                # push database
+                # device = models.Device.objects.get(idDevice=sensor["id"])
+                # models.ValueSensor.objects.create(device=device, value=int(sensor["data"]))
+
+    except Exception as e:
+        print("MQTT message error:", e)
+
+# ===================== MQTT SETUP =====================
+
 client = mqtt.Client()
+
 client.on_connect = on_connect
 client.on_message = on_message
-    # Connect MQTT
-client.connect(MQTT_SERVER, MQTT_PORT, MQTT_KEEPALIVE)  
-    # Running MQTT
-threading.Thread(target=client.loop_forever, daemon=True).start()
 
-# ======================= SETUP CHANNELS =======================
-    # Running Channels Redis
-asyncio.run(broadcast_latest_data())
+client.connect(MQTT_SERVER, MQTT_PORT, MQTT_KEEPALIVE)
+
+def mqtt_loop():
+    client.loop_forever()
+
+mqtt_thread = threading.Thread(target=mqtt_loop)
+mqtt_thread.daemon = True
+mqtt_thread.start()
+
+# ===================== RUN ASYNC LOOP =====================
+
+async def main():
+    await broadcast_latest_data()
+
+asyncio.run(main())
