@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 
 export default function Toast({ showToast, setShowToast, type, status, message }) {
-
+  // Menjalankan animasi Toast
   const [visible, setVisible] = useState(false);
 
+  // Style toast menyesuaikan dengan type pesannya 
   const styleToast = {
     success: "bg-green-100 border-green-300 text-green-800",
     error: "bg-red-100 border-red-300 text-red-800",
@@ -11,6 +12,7 @@ export default function Toast({ showToast, setShowToast, type, status, message }
     warning: "bg-yellow-100 border-yellow-300 text-yellow-800"
   };
 
+  // Menjalankan toast
   useEffect(() => {
 
     if (showToast) {
@@ -38,6 +40,7 @@ export default function Toast({ showToast, setShowToast, type, status, message }
 
   if (!showToast) return null;
 
+  
   return (
     <div className="fixed top-5 left-1/2 -translate-x-1/2 z-50">
       <div className={`flex items-start gap-3 p-4 border rounded-lg shadow-xl backdrop-blur-md text-sm transition-all duration-300 transform ${styleToast[type] || styleToast.success} ${visible ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-4"}`}>

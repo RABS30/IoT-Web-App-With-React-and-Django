@@ -8,7 +8,7 @@ import SearchAndFilter  from "../components/SearchAndFilter"
 import SensorCards      from "../components/SensorCards"
 import ActuatorCards    from "../components/ActuatorCards"
 import Toast            from "../components/Toast"
-
+import NewDeviceForm    from "../components/NewDeviceForm"
 
 
 
@@ -35,7 +35,7 @@ export default function DeviceSettings(){
         })
         .then(response => {
             // refresh list data
-            getFilteredDataHandler(null, 'Berhasil update data');
+            getFilteredDataHandler(null,true, 'Berhasil update data');
 
         })
         .catch(error => {
@@ -101,15 +101,15 @@ export default function DeviceSettings(){
         }))
     }
     // Get filtered data from django
-    const getFilteredDataHandler = (e, messageCustom='Berhasil mengambil data') => {
+    const getFilteredDataHandler = (e, show=false, messageCustom='Berhasil mengambil data', filter=filterOption) => {
         axios.get(URL_BACKEND+'device/', {
-            params: filterOption
+            params: filter
         })
         .then(response => {
             // Kirim notifikasi melalui toast
             setShowToast(prev => ({
                 ...prev,
-                showToast   : true,
+                showToast   : show,
                 type        : 'success',
                 status      : 'Success',
                 message     : messageCustom
@@ -121,7 +121,7 @@ export default function DeviceSettings(){
         .catch(error => {
             setShowToast(prev => ({
                 ...prev,
-                showToast   : true,
+                showToast   : show,
                 type        : 'error',
                 status      : error.status,
                 message     : error.message
@@ -131,8 +131,81 @@ export default function DeviceSettings(){
 
 
 // ========== ADD NEW DEVICE ==========
-    
+    // Default new device data
+    const newDevice = {
+        post: "new",
+        name: "",
+        status: true,
+        type: "sensor",
+        maxValue: "",
+        threshold: "",
+        measurement: "",
+        activation: "manual",
+        comparison: ">=",
+        sensorTarget: "",
+        activationValue: 0
+    }
 
+    // Show pop up 
+    const [showAddModal, setShowAddModal] = useState(false)
+    
+    // New device configuration
+    const [newDeviceData, setNewDeviceData] = useState(newDevice)
+    
+    // List Sensor Device
+    const [sensorList, setSensorList] = useState(null) 
+
+    // Create new data post to django
+    const submitNewDeviceHandler = () => {
+        axios.post(URL_BACKEND+'device/', newDeviceData)
+        .then(response => {
+            // Send Notification success add data 
+            setShowToast(prev => ({
+                ...prev,
+                showToast   : true,
+                type        : 'error',
+                status      : 'Success',
+                message     : 'Data berhasil ditambahkan'
+            }))
+
+            // get new data list updated
+            getFilteredDataHandler(Toast=false)
+        })
+        .catch((error) => {
+            // Send Notification failed add data 
+            setShowToast(prev => ({
+                ...prev,
+                showToast   : true,
+                type        : 'error',
+                status      : 'Success',
+                message     : 'Data berhasil ditambahkan'
+            }))
+
+            // get data list 
+            getFilteredDataHandler(Toast=false)
+        })
+    }
+
+    // Change form value
+    const handleFormChange = (e) => {
+        const {name, value} = e.target
+
+        setNewDeviceData(prev => ({
+            ...prev, [name]: (value === 'true' ? true : value === 'false' ? false : value)
+        }))
+    }
+
+    // Get device sensor for first time
+    useEffect(() => {
+        axios.get(URL_BACKEND+"device/sensor/")
+        .then(response => {
+            setSensorList(response.data)
+        })
+        .catch(error => {
+            console.log(error)
+        })
+    }, [])
+    
 
 // ========== TOAST ==========
     // Message default for toast
@@ -144,15 +217,16 @@ export default function DeviceSettings(){
 
     })
 
-
-
     return (
         <>
             {/* Toast */}
             <Toast showToast={showToast['showToast']} setShowToast={setShowToast} type={showToast['type']} message={showToast['message']} status={showToast['status']}/>
+            
+            {/* Add New Device Form */}
+            <NewDeviceForm showAddModal={showAddModal} setShowAddModal={setShowAddModal} submitNewDeviceHandler={submitNewDeviceHandler} handleFormChange={handleFormChange} newDevice={newDeviceData} sensorList={sensorList} />
 
             {/* Search and Filter  */}
-            <SearchAndFilter changeFilterOptionHandler={changeFilterOptionHandler} filterOption={filterOption} getFilteredDataHandler={getFilteredDataHandler} showPopUpAddDevice={showPopUpAddDevice} />
+            <SearchAndFilter changeFilterOptionHandler={changeFilterOptionHandler} filterOption={filterOption} getFilteredDataHandler={getFilteredDataHandler} setShowAddModal={setShowAddModal} />
             
             {/* Device Cards */}
             <div className="grid grid-cols-1 rounded-2xl  md:grid-cols-5 gap-6 p-6 bg-gray-100">   

@@ -1,4 +1,4 @@
-export default function SearchAndFilter({changeFilterOptionHandler, filterOption, getFilteredDataHandler, showPopUpAddDevice}){
+export default function SearchAndFilter({changeFilterOptionHandler, filterOption, getFilteredDataHandler, setShowAddModal}){
     // Component Return
     return (
         <div className="p-6">
@@ -20,7 +20,7 @@ export default function SearchAndFilter({changeFilterOptionHandler, filterOption
                     </select>
 
                 {/* Button untuk tambah device baru */}
-                <button onClick={showPopUpAddDevice} className="px-4 py-2 rounded-lg border text-white bg-green-600 hover:bg-green-700 border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
+                <button onClick={() => setShowAddModal(true)} className="px-4 py-2 rounded-lg border text-white bg-green-600 hover:bg-green-700 border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
                     Tambah device baru
                 </button>
                 </div>

@@ -39,7 +39,7 @@ export default function ActuatorCards({device, statusDeviceChangeHandler}){
             <p className="text-sm mb-2">
                 Aktifasi Aktuator :
                 <span className="ml-2 font-medium capitalize">
-                {device.compararison} {device.activation}
+                {device.comparison} {device.activation}
                 </span>
             </p>
 
@@ -48,7 +48,7 @@ export default function ActuatorCards({device, statusDeviceChangeHandler}){
                 <p className="text-sm mb-4">
                 Sensor Target :
                 <span className="ml-2 font-medium">
-                    {device.sensorTarget.device} 
+                    {device.sensorTarget} 
                 </span>
                 </p>
             </>}

@@ -50,19 +50,29 @@ def DeviceListView(request, *args):
     if request.method == "POST":
         body = json.loads(request.body)
         print(body)
-        
         # New Data
         if body["post"] == "new":
+            
             newDevice = Device.objects.create(name=body["name"], 
                                               type=body["type"])
-            
-            if body["type"] == "actuator" :
-                Actuator.objects.create(device=newDevice, 
-                                        status=body["status"], 
-                                        activation=body["activation"], 
-                                        sensorTarget=sensor, 
-                                        activationValue=body["activationValue"], 
-                                        compararison=body["comparison"])
+ 
+            if body['type'] == 'actuator' :
+                
+                try :
+                    sensor = Device.objects.get(idDevice=body['sensorTarget'])
+                    sensor = Sensor.objects.get(device=sensor)
+                    
+                    Actuator.objects.create(device=newDevice, 
+                                            status=body["status"], 
+                                            activation=body["activation"], 
+                                            sensorTarget=sensor, 
+                                            activationValue=body["activationValue"], 
+                                            comparison=body["comparison"])
+                except Exception as e:
+                    print(e)
+                    
+                
+                
             if body["type"] == "sensor" :
                 Sensor.objects.create(device=newDevice, 
                                       maxValue=body["maxValue"], 
