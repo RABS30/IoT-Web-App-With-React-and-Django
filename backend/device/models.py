@@ -59,7 +59,7 @@ class Actuator(models.Model):
     device          = models.OneToOneField(Device, verbose_name= "Device", on_delete=models.CASCADE, limit_choices_to={'type': 'actuator'}, related_name='actuator', to_field='idDevice')
     status          = models.BooleanField(verbose_name="Status Aktuator", choices=[(True, "On"), (False, "Off")])
     activation      = models.CharField(verbose_name="Aktifasi Aktuator", max_length=6, choices=[("sensor", "Berdasarkan Sensor"), ("manual", "Manual")])
-    sensorTarget    = models.ForeignKey(Sensor, verbose_name="Sensor Target", on_delete=models.CASCADE, null=True, blank=True)
+    sensorTarget    = models.ForeignKey(Sensor, verbose_name="Sensor Target", on_delete=models.SET_NULL, null=True, blank=True)
     activationValue = models.IntegerField(verbose_name="Nilai Aktifasi Aktuator", null=True, blank=True)
     comparison      = models.CharField(verbose_name="Perbandingan", max_length=5, choices=[("==", "=="), ("<=", "<="), (">=", ">=")], blank=True, null=True)
     last_activation = models.DateTimeField(verbose_name="Terakhir Aktif", auto_now=True, null=True)

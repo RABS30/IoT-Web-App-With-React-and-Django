@@ -35,7 +35,7 @@ export default function DeviceSettings(){
         })
         .then(response => {
             // refresh list data
-            getFilteredDataHandler(null,true, 'Berhasil update data');
+            getFilteredDataHandler(null, true, 'Berhasil update data');
 
         })
         .catch(error => {
@@ -169,7 +169,7 @@ export default function DeviceSettings(){
             }))
 
             // get new data list updated
-            getFilteredDataHandler(Toast=false)
+            getFilteredDataHandler(false)
         })
         .catch((error) => {
             // Send Notification failed add data 
@@ -182,7 +182,7 @@ export default function DeviceSettings(){
             }))
 
             // get data list 
-            getFilteredDataHandler(Toast=false)
+            getFilteredDataHandler(false)
         })
     }
 

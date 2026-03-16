@@ -8,4 +8,9 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
+  server: {
+    allowedHosts : [
+      "spondylitic-selenographically-seth.ngrok-free.dev"
+    ]
+  }
 })
