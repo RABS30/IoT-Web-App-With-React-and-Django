@@ -1,17 +1,14 @@
 import os
 from pathlib import Path
+from datetime import timedelta
 
 from dotenv import load_dotenv
-import paho.mqtt.client as mqtt
 
 load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv("SECRET_KEY")
@@ -20,22 +17,11 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-
-ALLOWED_HOSTS = []
-
-
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",
+ALLOWED_HOSTS = [
     
 ]
 
-
-CSRF_TRUSTED_ORIGINS = [
-    "http://localhost:5173",
-]
-
 # Application definition
-
 INSTALLED_APPS = [
     'daphne',
     'django.contrib.admin',
@@ -44,10 +30,19 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'corsheaders',
+    # App
     'core',
     'device',
-    "rest_framework",
+    
+    # Security
+    'corsheaders',
+    
+    # API
+    'rest_framework',
+    'rest_framework_simplejwt',
+    'rest_framework.authtoken',
+    'rest_framework_simplejwt.token_blacklist',
+    'dj_rest_auth',
 ]
 
 MIDDLEWARE = [
@@ -84,7 +79,6 @@ ASGI_APPLICATION = 'core.asgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
-
 DATABASES = {
     'default': {
         'ENGINE'    : 'django.db.backends.postgresql',
@@ -101,7 +95,6 @@ DATABASES = {
 
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -120,7 +113,6 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Internationalization
 # https://docs.djangoproject.com/en/6.0/topics/i18n/
-
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
@@ -132,13 +124,31 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
-
 STATIC_URL = 'static/'
+
+
+
+
+
+
+# ========== REST API ==========
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+]
+
+CORS_ALLOW_CREDENTIALS = True
+
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:5173",
+]
+
 
 
 # Django REST Framework
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': []
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'dj_rest_auth.jwt_auth.JWTCookieAuthentication',
+    ]
 }
 
 # Channels Django
@@ -151,4 +161,22 @@ CHANNEL_LAYERS = {
     }
 } 
 
+# dj rest auth configuration
+REST_AUTH = {
+    'USE_JWT'                   : True,
+    'JWT_AUTH_COOKIE'           : 'access',
+    'JWT_AUTH_REFRESH_COOKIE'   : 'refresh',
+    'JWT_AUTH_HTTPONLY'         : True,
+    'JWT_AUTH_SECURE'           : False,
+    'JWT_AUTH_SAMESITE'         : 'Lax',
+    'JWT_AUTH_RETURN_EXPIRATION': True
+}
 
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME'     : timedelta(minutes=15),
+    'REFRESH_TOKEN_LIFETIME'    : timedelta(days=1),
+    'ROTATE_REFRESH_TOKENS'     : True,
+    'BLACKLIST_AFTER_ROTATION'  : True,
+    'UPDATE_LAST_LOGIN'         : True
+}
