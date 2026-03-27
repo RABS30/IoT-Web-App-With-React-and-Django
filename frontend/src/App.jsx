@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, redirect } from "react-router-dom";
 
 import Charts from "./components/Charts";
 import RealTimeTable from "./components/DeviceStatus";
@@ -11,7 +11,8 @@ import MainLayout from "./components/MainLayout";
 import LoginPage from "./components/authentication/LoginPage";
 import ProtectedPage from "./components/authentication/ProtectedPage";
 import GuestPage from "./components/authentication/GuestPage";
-
+import RedirectAuthGoogle from "./components/authentication/RedirectAuthGoogle";
+import UserVerification from "./api/UserVerification";
 
 
 
@@ -20,7 +21,7 @@ function App() {
     <Router>
       <Routes >
         <Route element={<GuestPage />}>
-         <Route path="/login"  element={<LoginPage />} />
+         <Route path="/login"       element={<LoginPage />} />
         </Route>
 
         <Route element={<ProtectedPage />}>
@@ -31,7 +32,7 @@ function App() {
           </Route>
         </Route>
 
-
+        <Route path="/auth/google/callback/" element={<RedirectAuthGoogle />}/>
       </Routes>
     </Router>
   );

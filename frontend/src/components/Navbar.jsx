@@ -1,13 +1,17 @@
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
+import { useUserAuthenticated } from "../api/UserVerification";
+import LogoutButton from "./authentication/LogoutButton";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const {user}              = useUserAuthenticated()
 
   const menuItems = [
-    { name: "Dashboard",  path: "/" },
-    { name: "Device",     path: "/device" },
-    { name: "My Account", path: "/account" },
+    { name: "Dashboard",         path: "/" },
+    { name: "Device",            path: "/device" },
+    { name: "My Account",        path: "/account" },
+    { name: `${user?.username}`, path: "/account" },
   ];
 
   const linkBaseStyle =
@@ -43,6 +47,7 @@ export default function Navbar() {
               {item.name}
             </NavLink>
           ))}
+          <LogoutButton />
         </div>
 
         {/* Mobile Button */}

@@ -10,16 +10,19 @@ load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
+
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv("SECRET_KEY")
 
 
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
 ALLOWED_HOSTS = [
-    
+  
 ]
+
+
 
 # Application definition
 INSTALLED_APPS = [
@@ -33,6 +36,7 @@ INSTALLED_APPS = [
     # App
     'core',
     'device',
+    'authentication',
     
     # Security
     'corsheaders',
@@ -42,7 +46,13 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'rest_framework.authtoken',
     'rest_framework_simplejwt.token_blacklist',
+    # Authentication
     'dj_rest_auth',
+    'dj_rest_auth.registration',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
 ]
 
 MIDDLEWARE = [
@@ -54,6 +64,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = 'core.urls'
@@ -93,6 +104,7 @@ DATABASES = {
 }
 
 
+
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
 AUTH_PASSWORD_VALIDATORS = [
@@ -111,15 +123,14 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+
 # Internationalization
 # https://docs.djangoproject.com/en/6.0/topics/i18n/
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE   = 'en-us'
+TIME_ZONE       = 'UTC'
+USE_I18N        = True
+USE_TZ          = True
 
-TIME_ZONE = 'UTC'
-
-USE_I18N = True
-
-USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
@@ -128,17 +139,13 @@ STATIC_URL = 'static/'
 
 
 
-
-
-
 # ========== REST API ==========
-CORS_ALLOWED_ORIGINS = [
+# CORS and CSRF
+CORS_ALLOWED_ORIGINS    = [
     "http://localhost:5173",
 ]
-
-CORS_ALLOW_CREDENTIALS = True
-
-CSRF_TRUSTED_ORIGINS = [
+CORS_ALLOW_CREDENTIALS  = True
+CSRF_TRUSTED_ORIGINS    = [
     "http://localhost:5173",
 ]
 
@@ -150,6 +157,12 @@ REST_FRAMEWORK = {
         'dj_rest_auth.jwt_auth.JWTCookieAuthentication',
     ]
 }
+AUTHENTICATION_BACKENDS = [
+    # 'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend'
+]
+
+
 
 # Channels Django
 CHANNEL_LAYERS = {
@@ -161,7 +174,9 @@ CHANNEL_LAYERS = {
     }
 } 
 
-# dj rest auth configuration
+
+
+# Dj Rest Auth Configuration
 REST_AUTH = {
     'USE_JWT'                   : True,
     'JWT_AUTH_COOKIE'           : 'access',
@@ -169,10 +184,21 @@ REST_AUTH = {
     'JWT_AUTH_HTTPONLY'         : True,
     'JWT_AUTH_SECURE'           : False,
     'JWT_AUTH_SAMESITE'         : 'Lax',
-    'JWT_AUTH_RETURN_EXPIRATION': True
+    'JWT_AUTH_RETURN_EXPIRATION': True,
 }
 
 
+
+# Allauth Configuration
+ACCOUNT_LOGIN_METHODS               = {'email'}                                             # Login menggunakan email
+ACCOUNT_SIGNUP_FIELDS               = ['username', 'email*', 'email2*', 'password1*', 'password2*']
+ACCOUNT_UNIQUE_EMAIL                = True                                                  # Satu email hanya untuk satu akun
+# ACCOUNT_USER_MODEL_USERNAME_FIELD = None                                                  # Hapus username field jika perlu (opsional)
+ACCOUNT_EMAIL_VERIFICATION          = 'none'                                                # Jika Anda ingin verifikasi email dimatikan selama development
+
+
+
+# JWT Token Configuration
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME'     : timedelta(minutes=15),
     'REFRESH_TOKEN_LIFETIME'    : timedelta(days=1),
@@ -180,3 +206,27 @@ SIMPLE_JWT = {
     'BLACKLIST_AFTER_ROTATION'  : True,
     'UPDATE_LAST_LOGIN'         : True
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

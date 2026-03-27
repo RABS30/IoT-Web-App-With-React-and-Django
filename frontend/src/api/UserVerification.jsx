@@ -1,44 +1,40 @@
-import { createContext, useContext, useEffect, useState } from "react"
-import api from "./AxiosConfig"
+import { createContext, useContext, useEffect, useState, useCallback } from "react";
+import api from "./AxiosConfig";
 
-// buat context
-const UserAuthenticated = createContext()
+const UserAuthenticated = createContext();
 
+export default function UserVerification({ children }) {
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-export default function UserVerification({children}){
-    
-    const [user, setUser]       = useState(null)
-    const [loading, setLoading] = useState(true)
-
-    // Function untuk mengambil data detail pengguna
-    const authUser = async () => {
-        // mencoba mengambil data pengguna
-        try {
-            const response = await api.get('api/auth/user/')
-            setUser(response.data)
-        // Jika gagal mengambil data pengguna, ubah user ke null dan return error
-        }catch(error){
-            setUser(null)
-        // ubah loading menjadi false karena data sudah berhasil diambil 
-        }finally{
-            setLoading(false)
-        }
+  // Fungsi untuk memverifikasi user ke Django
+  const authUser = useCallback(async () => {
+    try {
+      const response = await api.get('api/auth/user/');
+      setUser(response.data);
+    } catch (error) {
+      setUser(null);
+      console.log("User belum terautentikasi");
+    } finally {
+      setLoading(false);
     }
+  }, []);
 
-    useEffect(() => {
-        authUser()
-    }, [])
+  useEffect(() => {
+    authUser();
+  }, [authUser]);
 
-    return (
-        <UserAuthenticated.Provider value={{user, setUser, loading}}>
-            {children}
-        </UserAuthenticated.Provider>
-    )
+  return (
+    <UserAuthenticated.Provider value={{ user, setUser, loading, authUser }}>
+      {children}
+    </UserAuthenticated.Provider>
+  );
 }
 
-
-export const useUserAuthenticated = () =>  {
-    const context = useContext(UserAuthenticated)
-
-    return context
-}   
+export const useUserAuthenticated = () => {
+  const context = useContext(UserAuthenticated);
+  if (!context) {
+    throw new Error("useUserAuthenticated harus digunakan di dalam UserVerification Provider");
+  }
+  return context;
+};

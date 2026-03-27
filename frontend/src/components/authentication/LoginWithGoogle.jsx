@@ -5,7 +5,7 @@ import React from 'react';
 const GOOGLE_CLIENT_ID = '26929392258-fsdqf6rg58pgv2to6ddsbah3ertcu7rc.apps.googleusercontent.com';
 
 // URL Callback di React Anda (pastikan ini didaftarkan di Google Console)
-const REDIRECT_URI = 'http://localhost:5173/auth/google/callback'; 
+const REDIRECT_URI = 'http://localhost:5173/auth/google/callback/'; 
 
 export default function LoginWithGoogle() {
   const handleGoogleLogin = () => {
@@ -28,7 +28,7 @@ export default function LoginWithGoogle() {
     <button
       onClick={handleGoogleLogin}
       type="button"
-      className="w-full flex justify-center items-center gap-2 py-2.5 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150"
+      className="w-full cursor-pointer flex justify-center items-center gap-2 py-2.5 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150"
     >
       {/* Logo Google (SVG) */}
       <svg className="w-5 h-5" viewBox="0 0 48 48">
