@@ -157,7 +157,7 @@ export default function LoginPage() {
 
                 <p className="text-sm text-center font-light text-gray-500 dark:text-gray-400">
                     Don’t have an account yet?{' '}
-                    <a href="#" className="font-medium text-blue-600 hover:underline dark:text-blue-500">
+                    <a href="/register" className="font-medium text-blue-600 hover:underline dark:text-blue-500">
                     Sign up
                     </a>
                 </p>

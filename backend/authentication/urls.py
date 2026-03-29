@@ -5,12 +5,11 @@ from .views import GoogleLogin
 from dj_rest_auth.views import LoginView, LogoutView, UserDetailsView, PasswordChangeView, PasswordResetView, PasswordResetConfirmView
 from dj_rest_auth.jwt_auth import get_refresh_view
 from dj_rest_auth.registration.views import RegisterView, VerifyEmailView, ResendEmailVerificationView
-from dj_rest_auth import urls
 
 from rest_framework_simplejwt.views import TokenVerifyView
 
-from allauth.account import views
-
+# from allauth import urls
+from dj_rest_auth.registration import urls
 
 
 

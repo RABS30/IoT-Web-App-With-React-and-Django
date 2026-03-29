@@ -183,15 +183,13 @@ REST_AUTH = {
     'JWT_AUTH_RETURN_EXPIRATION': True,
 }
 
-PASSWORD_RESET_CONFIRM_URL = 'http://localhost:5173/'
 
 # Allauth Configuration
 ACCOUNT_LOGIN_METHODS               = {'email'}                                             # Login menggunakan email
-ACCOUNT_SIGNUP_FIELDS               = ['username', 'email*', 'email2*', 'password1*', 'password2*']
+ACCOUNT_SIGNUP_FIELDS               = ['username*', 'email*', 'email2*', 'password1*', 'password2*']
 ACCOUNT_UNIQUE_EMAIL                = True                                                  # Satu email hanya untuk satu akun
 ACCOUNT_EMAIL_VERIFICATION          = 'mandatory'
-
-
+ACCOUNT_ADAPTER                     = 'authentication.adapter.AccountAdapter'
 
 # JWT Token Configuration
 SIMPLE_JWT = {
@@ -205,7 +203,7 @@ SIMPLE_JWT = {
 
 
 # Email configuration
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 DEFAULT_FROM_EMAIL = 'emailforhostuser@gmail.com'
 EMAIL_PORT = 587 

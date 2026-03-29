@@ -23,5 +23,4 @@ urlpatterns = [
     path("", include("device.urls")),
     
     path('authenticate/', include('authentication.urls')),
-    path('authenticate/', include('allauth.urls')),
 ]

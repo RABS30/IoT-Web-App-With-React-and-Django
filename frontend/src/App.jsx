@@ -14,6 +14,7 @@ import GuestPage from "./components/authentication/GuestPage";
 import RedirectAuthGoogle from "./components/authentication/RedirectAuthGoogle";
 import UserVerification from "./api/UserVerification";
 import RegisterUserPage from "./components/authentication/RegisterUserPage";
+import VerificationEmail from "./components/authentication/VerificationEmail";
 
 
 
@@ -22,7 +23,9 @@ function App() {
     <Router>
       <Routes >
         <Route element={<GuestPage />}>
-         <Route path="/login"       element={<LoginPage />} />
+         <Route path="/login"             element={<LoginPage />} />
+         <Route path='/register'          element={<RegisterUserPage />} />
+         <Route path="/confirm-email/:key" element={<VerificationEmail/>} />
         </Route>
 
         <Route element={<ProtectedPage />}>

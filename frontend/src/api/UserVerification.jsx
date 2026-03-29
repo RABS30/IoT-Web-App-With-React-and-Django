@@ -14,7 +14,6 @@ export default function UserVerification({ children }) {
       setUser(response.data);
     } catch (error) {
       setUser(null);
-      console.log("User belum terautentikasi");
     } finally {
       setLoading(false);
     }
