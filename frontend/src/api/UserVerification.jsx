@@ -10,7 +10,7 @@ export default function UserVerification({ children }) {
   // Fungsi untuk memverifikasi user ke Django
   const authUser = useCallback(async () => {
     try {
-      const response = await api.get('api/auth/user/');
+      const response = await api.get('authenticate/user/');
       setUser(response.data);
     } catch (error) {
       setUser(null);

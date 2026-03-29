@@ -25,7 +25,7 @@ api.interceptors.response.use(
 
             try {
                 // Ambil code baru
-                await axios.post(baseURL + 'api/auth/token/refresh/', {}, { withCredentials: true });
+                await axios.post(baseURL + 'authenticate/token/refresh/', {}, { withCredentials: true });
 
                 // Jalankan ulang request yang tadi gagal
                 return api(user_request);

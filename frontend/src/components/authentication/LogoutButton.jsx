@@ -1,14 +1,14 @@
 import { Navigate } from "react-router-dom"
 import api from "../../api/AxiosConfig"
 import { useUserAuthenticated } from "../../api/UserVerification";
-
+import Logout from "../../api/Logout";
 
 export default function LogoutButton(){
     const { setUser } = useUserAuthenticated();
 
     const  handleLogoutButton = async () => {
         try{
-            await api.post('http://localhost:8000/api/auth/logout/')
+            const response = await Logout()
 
             setUser(null)
 

@@ -13,6 +13,7 @@ import ProtectedPage from "./components/authentication/ProtectedPage";
 import GuestPage from "./components/authentication/GuestPage";
 import RedirectAuthGoogle from "./components/authentication/RedirectAuthGoogle";
 import UserVerification from "./api/UserVerification";
+import RegisterUserPage from "./components/authentication/RegisterUserPage";
 
 
 

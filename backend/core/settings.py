@@ -37,10 +37,8 @@ INSTALLED_APPS = [
     'core',
     'device',
     'authentication',
-    
     # Security
     'corsheaders',
-    
     # API
     'rest_framework',
     'rest_framework_simplejwt',
@@ -49,6 +47,7 @@ INSTALLED_APPS = [
     # Authentication
     'dj_rest_auth',
     'dj_rest_auth.registration',
+    
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
@@ -89,7 +88,6 @@ ASGI_APPLICATION = 'core.asgi.application'
 
 
 # Database
-# https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 DATABASES = {
     'default': {
         'ENGINE'    : 'django.db.backends.postgresql',
@@ -106,7 +104,6 @@ DATABASES = {
 
 
 # Password validation
-# https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -122,10 +119,15 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# Authentication Configuration
+AUTHENTICATION_BACKENDS = [
+    # 'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend'
+]
 
 
-# Internationalization
-# https://docs.djangoproject.com/en/6.0/topics/i18n/
+
+# Region and Timezone
 LANGUAGE_CODE   = 'en-us'
 TIME_ZONE       = 'UTC'
 USE_I18N        = True
@@ -134,12 +136,10 @@ USE_TZ          = True
 
 
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/6.0/howto/static-files/
 STATIC_URL = 'static/'
 
 
 
-# ========== REST API ==========
 # CORS and CSRF
 CORS_ALLOWED_ORIGINS    = [
     "http://localhost:5173",
@@ -157,10 +157,6 @@ REST_FRAMEWORK = {
         'dj_rest_auth.jwt_auth.JWTCookieAuthentication',
     ]
 }
-AUTHENTICATION_BACKENDS = [
-    # 'django.contrib.auth.backends.ModelBackend',
-    'allauth.account.auth_backends.AuthenticationBackend'
-]
 
 
 
@@ -187,14 +183,13 @@ REST_AUTH = {
     'JWT_AUTH_RETURN_EXPIRATION': True,
 }
 
-
+PASSWORD_RESET_CONFIRM_URL = 'http://localhost:5173/'
 
 # Allauth Configuration
 ACCOUNT_LOGIN_METHODS               = {'email'}                                             # Login menggunakan email
 ACCOUNT_SIGNUP_FIELDS               = ['username', 'email*', 'email2*', 'password1*', 'password2*']
 ACCOUNT_UNIQUE_EMAIL                = True                                                  # Satu email hanya untuk satu akun
-# ACCOUNT_USER_MODEL_USERNAME_FIELD = None                                                  # Hapus username field jika perlu (opsional)
-ACCOUNT_EMAIL_VERIFICATION          = 'none'                                                # Jika Anda ingin verifikasi email dimatikan selama development
+ACCOUNT_EMAIL_VERIFICATION          = 'mandatory'
 
 
 
@@ -209,12 +204,19 @@ SIMPLE_JWT = {
 
 
 
+# Email configuration
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+DEFAULT_FROM_EMAIL = 'emailforhostuser@gmail.com'
+EMAIL_PORT = 587 
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'emailforhostuser@gmail.com'
+EMAIL_HOST_PASSWORD = os.getenv("GOOGLE_PASSWORD")
 
 
 
 
-
-
+ 
 
 
 

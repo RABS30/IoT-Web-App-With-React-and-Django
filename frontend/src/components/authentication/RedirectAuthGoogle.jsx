@@ -16,7 +16,7 @@ export default function RedirectAuthGoogle() {
       if (code) {
         try {
           // 1. Kirim code ke Django
-          const response = await api.post('/api/auth/google/', { code });
+          const response = await api.post('authenticate/google/', { code });
           
           // 2. Ambil data user dari response login dan simpan ke Context
           // Pastikan Django Anda mengirimkan data user dalam object response

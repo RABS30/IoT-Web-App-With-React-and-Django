@@ -4,7 +4,7 @@ export default async function Login(email, password){
     // Login
     try {
         // Mencoba login
-        const response = await api.post('api/auth/login/', {
+        const response = await api.post('authenticate/login/', {
             email       : email, 
             password    : password
         })
