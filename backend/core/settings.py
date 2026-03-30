@@ -181,6 +181,7 @@ REST_AUTH = {
     'JWT_AUTH_SECURE'           : False,
     'JWT_AUTH_SAMESITE'         : 'Lax',
     'JWT_AUTH_RETURN_EXPIRATION': True,
+    'REGISTER_SERIALIZER'       : 'authentication.serializers.CustomRegisterSerializer'
 }
 
 
@@ -203,12 +204,12 @@ SIMPLE_JWT = {
 
 
 # Email configuration
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-DEFAULT_FROM_EMAIL = 'emailforhostuser@gmail.com'
-EMAIL_PORT = 587 
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'emailforhostuser@gmail.com'
+EMAIL_BACKEND       = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST          = 'smtp.gmail.com'
+DEFAULT_FROM_EMAIL  = os.getenv("GOOGLE_EMAIL")
+EMAIL_PORT          = 587 
+EMAIL_USE_TLS       = True
+EMAIL_HOST_USER     = os.getenv("GOOGLE_EMAIL")
 EMAIL_HOST_PASSWORD = os.getenv("GOOGLE_PASSWORD")
 
 

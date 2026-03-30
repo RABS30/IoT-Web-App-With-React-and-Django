@@ -20,14 +20,20 @@ export default function RegisterUserPage(){
 
     // Berhasil Registrasi atau belum
     const [successRegister, setSuccessRegister] = useState(false)
+    
+    // saat button registrasi pengguna ditekan
+    const [clicked, setClicked] = useState(false)
 
     // Registrasi data user
     const handleRegister = async (e) => {
         e.preventDefault()
+        setClicked(true)
+
         try {
             const response = await api.post('authenticate/register/', userData)
             setSuccessRegister(true)
         }catch(error){
+            setClicked(false)
             setShowToast(prev => ({
                 ...prev,
                 showToast   : true,
@@ -142,8 +148,14 @@ export default function RegisterUserPage(){
                                         />
                                     </div>
 
-                                    <button type="submit" className="w-full cursor-pointer text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-bold rounded-xl text-md px-5 py-3 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 transition-all transform active:scale-[0.98]">
-                                        Create Account
+                                    {/* <button type="submit" className={`${clicked ? '' : "w-full  cursor-pointer text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-bold rounded-xl text-md px-5 py-3 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 transition-all transform active:scale-[0.98]"}`}> */}
+                                    <button 
+                                    type="submit" 
+                                    disabled={clicked} // Akan true jika sedang loading
+                                    className={`w-full text-white font-bold rounded-xl text-md px-5 py-3 text-center transition-all transform 
+                                        ${clicked ? "bg-gray-600 cursor-not-allowed opacity-70" : "bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 active:scale-[0.98]" }`}>
+                                            {clicked ? 'Loading...' : 'Create Account'}
+                                        
                                     </button>
 
                                     <div className="relative flex py-2 items-center">
