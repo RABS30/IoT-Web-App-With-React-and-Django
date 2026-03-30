@@ -190,7 +190,11 @@ ACCOUNT_LOGIN_METHODS               = {'email'}                                 
 ACCOUNT_SIGNUP_FIELDS               = ['username*', 'email*', 'email2*', 'password1*', 'password2*']
 ACCOUNT_UNIQUE_EMAIL                = True                                                  # Satu email hanya untuk satu akun
 ACCOUNT_EMAIL_VERIFICATION          = 'mandatory'
+SOCIALACCOUNT_AUTO_SIGNUP           = True
+SOCIALACCOUNT_QUERY_EMAIL           = True
+SOCIALACCOUNT_EMAIL_AUTHENTICATION  = True
 ACCOUNT_ADAPTER                     = 'authentication.adapter.AccountAdapter'
+SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT = True
 
 # JWT Token Configuration
 SIMPLE_JWT = {

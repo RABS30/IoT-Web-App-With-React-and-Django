@@ -1,6 +1,7 @@
 import { useState } from "react";
 import api from "../../api/AxiosConfig";
 import Toast from "../Toast";
+import LoginWithGoogle from "./LoginWithGoogle";
 export default function RegisterUserPage(){
     // Data pengguna untuk registrasi
     const [userData, setUserData]   = useState({
@@ -153,7 +154,7 @@ export default function RegisterUserPage(){
                                     type="submit" 
                                     disabled={clicked} // Akan true jika sedang loading
                                     className={`w-full text-white font-bold rounded-xl text-md px-5 py-3 text-center transition-all transform 
-                                        ${clicked ? "bg-gray-600 cursor-not-allowed opacity-70" : "bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 active:scale-[0.98]" }`}>
+                                        ${clicked ? "bg-gray-600 cursor-not-allowed opacity-70" : "bg-blue-600 cursor-pointer hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 active:scale-[0.98]" }`}>
                                             {clicked ? 'Loading...' : 'Create Account'}
                                         
                                     </button>
@@ -165,10 +166,8 @@ export default function RegisterUserPage(){
                                     </div>
 
                                     {/* Komponen Google Login Anda */}
-                                    <button type="button" className="w-full flex items-center justify-center gap-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-600 transition-all">
-                                        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" className="w-5 h-5" />
-                                        Google
-                                    </button>
+                                    <LoginWithGoogle />
+
 
                                     <p className="text-sm text-center font-light text-gray-500 dark:text-gray-400">
                                         Already have an account?{' '}
