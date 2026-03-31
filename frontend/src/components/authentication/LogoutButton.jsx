@@ -3,6 +3,9 @@ import api from "../../api/AxiosConfig"
 import { useUserAuthenticated } from "../../api/UserVerification";
 import Logout from "../../api/Logout";
 
+import { SignOut } from "@phosphor-icons/react";
+
+
 export default function LogoutButton(){
     const { setUser } = useUserAuthenticated();
 
@@ -20,6 +23,8 @@ export default function LogoutButton(){
 
     return (
         
-        <button onClick={handleLogoutButton} className="px-3 py-2 rounded-md transition duration-200 hover:bg-slate-700 hover:text-sky-400 cursor-pointer text-white">Logout</button>
+        <button onClick={handleLogoutButton} className="w-full cursor-pointer flex items-center justify-center gap-2 text-red-600 dark:text-red-400 bg-transparent border-2 border-red-200 dark:border-red-900/30 hover:bg-red-50 dark:hover:bg-red-900/20 font-bold rounded-xl text-md px-5 py-3.5 transition-all transform active:scale-[0.98]">                            
+            <SignOut size={20} weight="bold" /> Logout Account
+        </button>
     )
 }

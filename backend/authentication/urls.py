@@ -33,3 +33,5 @@ urlpatterns = [
     path('token/verify/',   TokenVerifyView.as_view(),      name='verify_jwt'),
     path('token/refresh/',  get_refresh_view().as_view(),   name='refresh_jwt'),
 ]
+
+

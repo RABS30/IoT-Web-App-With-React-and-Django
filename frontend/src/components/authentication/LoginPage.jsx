@@ -4,8 +4,7 @@ import LoginWithGoogle                  from './LoginWithGoogle';
 import axios                            from 'axios';
 import api                              from '../../api/AxiosConfig';
 import Login                            from '../../api/Login';
-import Toast from '../Toast';
-
+import Toast                            from '../../utils/Toast';
 
 
 export default function LoginPage() {

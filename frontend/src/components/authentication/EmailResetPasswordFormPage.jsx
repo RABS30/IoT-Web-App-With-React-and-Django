@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import api from '../../api/AxiosConfig';
-import Toast from '../Toast';
+import Toast from '../../utils/Toast';
+
+
 
 export default function EmailResetPasswordFormPage() {
     // Email yang akan reset password

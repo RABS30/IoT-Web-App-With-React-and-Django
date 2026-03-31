@@ -1,13 +1,15 @@
 import { BrowserRouter as Router, Routes, Route, redirect } from "react-router-dom";
 
-import Charts from "./components/Charts";
-import RealTimeTable from "./components/DeviceStatus";
-import SummaryChart from "./components/SummaryChart";
-import Navbar from "./components/Navbar";
+import Charts     from "./utils/Charts";
+import Navbar     from "./utils/Navbar";
+import MainLayout from "./utils/MainLayout";
+
+
+import RealTimeTable from "./components/devices/DeviceStatus";
+import SummaryChart from "./components/devices/SummaryChart";
 import Dashboard from "./pages/Dashboard";
 import DeviceSettings from "./pages/DeviceSettings";
-import Websocket from "./components/Websocket";
-import MainLayout from "./components/MainLayout";
+import Websocket from "./api/Websocket";
 import LoginPage from "./components/authentication/LoginPage";
 import ProtectedPage from "./components/authentication/ProtectedPage";
 import GuestPage from "./components/authentication/GuestPage";
@@ -18,6 +20,7 @@ import VerificationEmail from "./components/authentication/VerificationEmail";
 import ResetPasswordFormPage from "./components/authentication/ResetPasswordFormPage";
 import EmailResetPasswordFormPage from "./components/authentication/EmailResetPasswordFormPage";
 import ChangePasswordFormPage from "./components/authentication/ChangePasswordFormPage";
+import DetailProfilePage from "./pages/DetailProfilePage";
 
 
 
@@ -35,10 +38,12 @@ function App() {
 
         <Route element={<ProtectedPage />}>
             <Route path="/change-password"   element={<ChangePasswordFormPage />} />
+            <Route path="/edit-profile"      element={<ChangePasswordFormPage />} />
           <Route element={<MainLayout />}>
             <Route path="/"                   element={<Dashboard />} />
             <Route path="/account"            element={<Websocket />} />
             <Route path="/device"             element={<DeviceSettings />} />
+            <Route path="/profile"            element={<DetailProfilePage />} />
           </Route>
         </Route>
 

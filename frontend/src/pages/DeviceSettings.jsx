@@ -4,12 +4,11 @@ import axios from "axios"
 
 
 // Component
-import SearchAndFilter  from "../components/SearchAndFilter"
-import SensorCards      from "../components/SensorCards"
-import ActuatorCards    from "../components/ActuatorCards"
-import Toast            from "../components/Toast"
-import NewDeviceForm    from "../components/NewDeviceForm"
-
+import SearchAndFilter  from "../components/devices/SearchAndFilter"
+import SensorCards      from "../components/devices/SensorCards"
+import ActuatorCards    from "../components/devices/ActuatorCards"
+import NewDeviceForm    from "../components/devices/NewDeviceForm"
+import Toast            from "../utils/Toast"
 
 
 export default function DeviceSettings(){
@@ -218,27 +217,35 @@ export default function DeviceSettings(){
     })
 
     return (
-        <>
-            {/* Toast */}
-            <Toast showToast={showToast['showToast']} setShowToast={setShowToast} type={showToast['type']} message={showToast['message']} status={showToast['status']}/>
-            
-            {/* Add New Device Form */}
-            <NewDeviceForm showAddModal={showAddModal} setShowAddModal={setShowAddModal} submitNewDeviceHandler={submitNewDeviceHandler} handleFormChange={handleFormChange} newDevice={newDeviceData} sensorList={sensorList} />
+        <div className="min-h-screen w-full bg-gray-950 flex flex-col items-center p-4 relative overflow-hidden">
+            {/* ===== Background Decorative Blobs ===== */}
+            <div className="absolute -top-40 -left-40 w-96 h-96 bg-indigo-700 rounded-full opacity-30 blur-[100px] pointer-events-none"></div>
+            <div className="absolute top-1/3 -right-20 w-80 h-80 bg-fuchsia-600 rounded-full opacity-25 blur-[90px] pointer-events-none"></div>
+            <div className="absolute -bottom-32 left-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-blue-600 rounded-full opacity-20 blur-[120px] pointer-events-none"></div>
 
-            {/* Search and Filter  */}
-            <SearchAndFilter changeFilterOptionHandler={changeFilterOptionHandler} filterOption={filterOption} getFilteredDataHandler={getFilteredDataHandler} setShowAddModal={setShowAddModal} />
-            
-            {/* Device Cards */}
-            <div className="grid grid-cols-1 rounded-2xl  md:grid-cols-5 gap-6 p-6 bg-gray-100">   
-                {deviceList?.map((device) => (
-                    device.type === 'sensor' ? (
-                        <SensorCards key={device.idDevice} device={device} statusDeviceChangeHandler={statusDeviceChangeHandler}/>
-                    ) : device.type === 'actuator' ? (
-                        <ActuatorCards key={device.idDevice} device={device} statusDeviceChangeHandler={statusDeviceChangeHandler} />
-                    ) : null
-                ))}
+            <div className="z-10 w-full max-w-7xl space-y-6">
+                {/* Toast */}
+                <Toast showToast={showToast['showToast']} setShowToast={setShowToast} type={showToast['type']} message={showToast['message']} status={showToast['status']}/>
+                
+                {/* Add New Device Form */}
+                <NewDeviceForm showAddModal={showAddModal} setShowAddModal={setShowAddModal} submitNewDeviceHandler={submitNewDeviceHandler} handleFormChange={handleFormChange} newDevice={newDeviceData} sensorList={sensorList} />
+
+                {/* Search and Filter - Dibungkus container transparan agar senada */}
+                <div className="bg-white/5 backdrop-blur-sm rounded-2xl border border-white/10 p-2">
+                    <SearchAndFilter changeFilterOptionHandler={changeFilterOptionHandler} filterOption={filterOption} getFilteredDataHandler={getFilteredDataHandler} setShowAddModal={setShowAddModal} />
+                </div>
+                
+                {/* Device Cards - Mengubah bg-gray-100 menjadi transparan/glassmorphism */}
+                <div className="grid grid-cols-1 rounded-2xl md:grid-cols-5 gap-6 p-6 bg-white/5 backdrop-blur-md border border-white/10 shadow-2xl">   
+                    {deviceList?.map((device) => (
+                        device.type === 'sensor' ? (
+                            <SensorCards key={device.idDevice} device={device} statusDeviceChangeHandler={statusDeviceChangeHandler}/>
+                        ) : device.type === 'actuator' ? (
+                            <ActuatorCards key={device.idDevice} device={device} statusDeviceChangeHandler={statusDeviceChangeHandler} />
+                        ) : null
+                    ))}
+                </div>
             </div>
-
-        </>
+        </div>
     )
 }

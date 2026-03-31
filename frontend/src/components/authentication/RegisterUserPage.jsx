@@ -1,7 +1,10 @@
 import { useState } from "react";
 import api from "../../api/AxiosConfig";
-import Toast from "../Toast";
 import LoginWithGoogle from "./LoginWithGoogle";
+import Toast from "../../utils/Toast";
+
+
+
 export default function RegisterUserPage(){
     // Data pengguna untuk registrasi
     const [userData, setUserData]   = useState({

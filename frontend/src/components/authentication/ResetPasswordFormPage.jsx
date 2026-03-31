@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import api from "../../api/AxiosConfig";
-import Toast from "../Toast";
+import Toast from "../../utils/Toast";
+
+
 
 export default function ResetPasswordFormPage(){
     const navigate = useNavigate()

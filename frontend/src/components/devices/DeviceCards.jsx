@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 
 import axios from "axios"; 
 
-import Toast from "./Toast";
+import Toast from "../Toast";
 
 export default function DeviceCards() {
 {/* ================= VARIABLE AND STATE ================= */}
