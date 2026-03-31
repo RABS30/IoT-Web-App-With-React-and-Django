@@ -135,15 +135,12 @@ export default function LoginPage() {
                         </label>
                     </div>
                     </div>
-                    <a href="#" className="text-sm font-medium text-blue-600 hover:underline dark:text-blue-500">
+                    <a href="/reset-password" className="text-sm font-medium text-blue-600 hover:underline dark:text-blue-500">
                     Forgot password?
                     </a>
                 </div>
 
-                <button
-                    type="submit"
-                    className="w-full cursor-pointer text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-bold rounded-xl text-md px-5 py-3 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 transition-all transform active:scale-[0.98]"
-                >
+                <button type="submit" className="w-full cursor-pointer text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-bold rounded-xl text-md px-5 py-3 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 transition-all transform active:scale-[0.98]">
                     Sign in
                 </button>
                 

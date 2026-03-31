@@ -181,9 +181,11 @@ REST_AUTH = {
     'JWT_AUTH_SECURE'           : False,
     'JWT_AUTH_SAMESITE'         : 'Lax',
     'JWT_AUTH_RETURN_EXPIRATION': True,
-    'REGISTER_SERIALIZER'       : 'authentication.serializers.CustomRegisterSerializer'
+    'REGISTER_SERIALIZER'       : 'authentication.serializers.CustomRegisterSerializer',
+    'PASSWORD_RESET_SERIALIZER' : 'authentication.serializers.CustomPasswordResetSerializer',
+    'OLD_PASSWORD_FIELD_ENABLED': True,
 }
-
+# Menambahkan fitur reset password dan change password, serta memperbarui URL konfirmasi email. Memperbaiki struktur dan menambahkan komponen baru untuk pengelolaan password.
 
 # Allauth Configuration
 ACCOUNT_LOGIN_METHODS               = {'email'}                                             # Login menggunakan email
@@ -194,7 +196,7 @@ SOCIALACCOUNT_AUTO_SIGNUP           = True
 SOCIALACCOUNT_QUERY_EMAIL           = True
 SOCIALACCOUNT_EMAIL_AUTHENTICATION  = True
 ACCOUNT_ADAPTER                     = 'authentication.adapter.AccountAdapter'
-SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT = True
+
 
 # JWT Token Configuration
 SIMPLE_JWT = {

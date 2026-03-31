@@ -2,6 +2,7 @@ import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { useUserAuthenticated } from "../api/UserVerification";
 import LogoutButton from "./authentication/LogoutButton";
+import ChangePasswordButton from "./authentication/ChangePasswordButton";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -47,6 +48,7 @@ export default function Navbar() {
               {item.name}
             </NavLink>
           ))}
+          <ChangePasswordButton />
           <LogoutButton />
         </div>
 

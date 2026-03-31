@@ -1,5 +1,4 @@
-from django.urls import path, include
-from django.views.generic import TemplateView
+from django.urls import path
 from .views import GoogleLogin
 
 from dj_rest_auth.views import LoginView, LogoutView, UserDetailsView, PasswordChangeView, PasswordResetView, PasswordResetConfirmView
@@ -7,11 +6,6 @@ from dj_rest_auth.jwt_auth import get_refresh_view
 from dj_rest_auth.registration.views import RegisterView, VerifyEmailView, ResendEmailVerificationView
 
 from rest_framework_simplejwt.views import TokenVerifyView
-
-# from allauth import urls
-from dj_rest_auth.registration import urls
-
-
 
 urlpatterns = [
     # Detail user data 
@@ -32,7 +26,7 @@ urlpatterns = [
     # Password Management
     path('password/change/',        PasswordChangeView.as_view(),       name='password_change'),
     path('password/reset/',         PasswordResetView.as_view(),        name='password_reset'),
-    path('password/reset/confirm/<uidb64>/<token>/', PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
+    path('password/reset/confirm/', PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
     
     
     # Token Management
