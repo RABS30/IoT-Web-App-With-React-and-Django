@@ -1,33 +1,60 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 // Cek kembali penamaan ini, biasanya UserEdit ditulis sebagai UserCircleGear atau PencilSimple
 import { Key, PencilSimple, CheckCircle, WarningCircle, SignOut } from "@phosphor-icons/react";
 import { useNavigate } from 'react-router-dom';
 import LogoutButton from '../components/authentication/LogoutButton';
+import api from '../api/AxiosConfig';
 
 export default function DetailProfilePage () {
+    // Data user
+    const [profileData, setProfileData] = useState({
+        username: "",
+        email: "",
+        first_name: "",
+        last_name: "",
+        is_verified: true,
+        profile_picture: null 
+    })
+
+    // Untuk redirect ke halaman tertentu
     const navigate = useNavigate()
 
-
+    // Redirect ke halaman edit profile
     const onEditClick = () => {
         navigate('/edit-profile')
     }
+
+    // Redirect ke halaman ganti password
     const onChangePasswordClick = () => {
         navigate('/change-password')
     }
 
-    const onLogoutClick = () => {
+    // Mengambil data 
+    useEffect(() => {
+        const getUserProfile = async () => {
+            try {
+                // Ambil detail data pengguna
+                const response = await api.get('authenticate/user/')
+                const profile = response.data
+                    setProfileData((prev) => ({
+                        ...prev, 
+                        username    : profile.username,
+                        email       : profile.email,
+                        first_name  : profile.first_name,
+                        last_name   : profile.last_name,
+                    })
+                 )
+            }catch(error){
+                console.log(error)
+            }
+        }
+        getUserProfile()
+    }, [])
 
-    }
-    // Data dummy untuk simulasi jika props kosong
-    const profileData = {
-        username: "johndoe",
-        email: "john.doe@example.com",
-        first_name: "John",
-        last_name: "Doe",
-        is_verified: true,
-        profile_picture: null // URL foto jika ada
-    };
 
+
+
+    
     return (
         <div className="h-screen w-full bg-gray-950 flex justify-center items-center p-4 relative overflow-hidden">
             {/* ===== Background Decorative Blobs ===== */}
@@ -45,11 +72,7 @@ export default function DetailProfilePage () {
                             <div className="relative">
                                 <div className="w-32 h-32 rounded-full border-4 border-blue-600 p-1 shadow-xl shadow-blue-600/20">
                                     {profileData.profile_picture ? (
-                                        <img 
-                                            src={profileData.profile_picture} 
-                                            alt="Profile" 
-                                            className="w-full h-full rounded-full object-cover"
-                                        />
+                                        <img src={profileData.profile_picture} alt="Profile" className="w-full h-full rounded-full object-cover"/>
                                     ) : (
                                         <div className="w-full h-full rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-gray-400">
                                             <svg className="w-16 h-16" fill="currentColor" viewBox="0 0 24 24">

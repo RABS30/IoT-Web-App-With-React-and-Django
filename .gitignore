@@ -23,12 +23,12 @@ dist-ssr
 *.sln
 *.sw?
 
-
 # Backend
 *.env
 env
 bin
 __pycache__
+static
 
 # Flowchart
 Flowchart.excalidraw

@@ -1,5 +1,9 @@
 from django.apps import AppConfig
 
 
-class SocialaccountConfig(AppConfig):
+class AuthenticateConfig(AppConfig):
     name = 'authentication'
+    
+    def ready(self):
+        import authentication.signals
+        
