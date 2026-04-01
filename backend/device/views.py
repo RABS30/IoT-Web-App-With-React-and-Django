@@ -2,16 +2,12 @@ import json
 
 from django.db.models import Q
 
-from django.shortcuts import render
 from django.http import JsonResponse
 
-from django.views.decorators.csrf import csrf_exempt
 
 from .models import Device, Actuator, Sensor
-from .serializers import SensorSerializers, DeviceSerializers, ActuatorSerializers
+from .serializers import  DeviceSerializers
 
-
-@csrf_exempt
 def DeviceListView(request, *args):
     if request.method == "GET":
         # Variable Filter
@@ -49,7 +45,8 @@ def DeviceListView(request, *args):
     
     if request.method == "POST":
         body = json.loads(request.body)
-        print(body)
+
+
         # New Data
         if body["post"] == "new":
             
@@ -69,7 +66,7 @@ def DeviceListView(request, *args):
                                             activationValue=body["activationValue"], 
                                             comparison=body["comparison"])
                 except Exception as e:
-                    print(e)
+                    raise e
                     
                 
                 

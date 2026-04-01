@@ -9,6 +9,7 @@ import SensorCards      from "../components/devices/SensorCards"
 import ActuatorCards    from "../components/devices/ActuatorCards"
 import NewDeviceForm    from "../components/devices/NewDeviceForm"
 import Toast            from "../utils/Toast"
+import api              from "../api/AxiosConfig"
 
 
 export default function DeviceSettings(){
@@ -24,20 +25,19 @@ export default function DeviceSettings(){
     const [showForm, setShowForm] = useState(false)
 
     // Device Status Update
-    const statusDeviceChangeHandler = (idDevice, type, status) => {
-        // Update data using POST
-        axios.post(URL_BACKEND+'device/', {
-            post    : "statusUpdate",
-            idDevice: idDevice,
-            type    : type, 
-            status  : !status 
-        })
-        .then(response => {
+    const statusDeviceChangeHandler = async (idDevice, type, status) => {
+        try{
+            const response = await api.post('device/', {
+                post    : "statusUpdate",
+                idDevice: idDevice,
+                type    : type, 
+                status  : !status 
+            })
+
             // refresh list data
             getFilteredDataHandler(null, true, 'Berhasil update data');
 
-        })
-        .catch(error => {
+        }catch(error){
             setShowToast(prev => ({
                 ...prev,
                 showToast   : true,
@@ -45,36 +45,37 @@ export default function DeviceSettings(){
                 status      : error.status,
                 message     : error.message
             }))
-        })
-
+        }
     } 
 
     // Get First time data list
     useEffect(() => {
-        axios.get(URL_BACKEND+'device/')
-        .then(response => {
-             // Kirim notifikasi melalui toast
-            setShowToast(prev => ({
-                ...prev,
-                showToast   : true,
-                type        : 'success',
-                status      : 'Success',
-                message     : 'Berhasil mengambil data'
-            }))
+        const getDataFirstTime = async () => {
+            try{
+                const response = await api.get('device/')
+                // Kirim notifikasi melalui toast
+                setShowToast(prev => ({
+                    ...prev,
+                    showToast   : true,
+                    type        : 'success',
+                    status      : 'Success',
+                    message     : 'Berhasil mengambil data'
+                }))
+                // Menyimpan data list device
+                setDeviceList(response.data)
 
-            // Menyimpan data list device
-            setDeviceList(response.data)
-        })
-        .catch(error => {
-            // Mengirim notifikasi error menggunakan toast
-            setShowToast(prev => ({
-                ...prev,
-                showToast   : true,
-                type        : 'error',
-                status      : error.status,
-                message     : error.message
-            }))
-        })
+            }catch(error){
+                // Mengirim notifikasi error menggunakan toast
+                setShowToast(prev => ({
+                    ...prev,
+                    showToast   : true,
+                    type        : 'error',
+                    status      : error.status,
+                    message     : error.message
+                }))
+            }
+        }
+        getDataFirstTime()
     }, [])
 
     // Active pop up form to add new device
@@ -100,11 +101,11 @@ export default function DeviceSettings(){
         }))
     }
     // Get filtered data from django
-    const getFilteredDataHandler = (e, show=false, messageCustom='Berhasil mengambil data', filter=filterOption) => {
-        axios.get(URL_BACKEND+'device/', {
-            params: filter
-        })
-        .then(response => {
+    const getFilteredDataHandler = async (e, show=false, messageCustom='Berhasil mengambil data', filter=filterOption) => {
+        try{
+            const response = await api.get('device/', {
+                params: filter
+            })
             // Kirim notifikasi melalui toast
             setShowToast(prev => ({
                 ...prev,
@@ -116,8 +117,7 @@ export default function DeviceSettings(){
 
             // Menyimpan list device yang sudah di filter
             setDeviceList(response.data)
-        })
-        .catch(error => {
+        }catch(error){
             setShowToast(prev => ({
                 ...prev,
                 showToast   : show,
@@ -125,7 +125,7 @@ export default function DeviceSettings(){
                 status      : error.status,
                 message     : error.message
             }))
-        })
+        }
     }
 
 
@@ -155,9 +155,11 @@ export default function DeviceSettings(){
     const [sensorList, setSensorList] = useState(null) 
 
     // Create new data post to django
-    const submitNewDeviceHandler = () => {
-        axios.post(URL_BACKEND+'device/', newDeviceData)
-        .then(response => {
+    const submitNewDeviceHandler = async () => {
+        try {
+            const response = await api.post('device/', {
+                newDeviceData
+            })
             // Send Notification success add data 
             setShowToast(prev => ({
                 ...prev,
@@ -166,12 +168,10 @@ export default function DeviceSettings(){
                 status      : 'Success',
                 message     : 'Data berhasil ditambahkan'
             }))
-
+    
             // get new data list updated
             getFilteredDataHandler(false)
-        })
-        .catch((error) => {
-            // Send Notification failed add data 
+        }catch(error){
             setShowToast(prev => ({
                 ...prev,
                 showToast   : true,
@@ -182,7 +182,7 @@ export default function DeviceSettings(){
 
             // get data list 
             getFilteredDataHandler(false)
-        })
+        }
     }
 
     // Change form value
@@ -196,13 +196,19 @@ export default function DeviceSettings(){
 
     // Get device sensor for first time
     useEffect(() => {
-        axios.get(URL_BACKEND+"device/sensor/")
-        .then(response => {
-            setSensorList(response.data)
-        })
-        .catch(error => {
-            console.log(error)
-        })
+        const getSensorList = async () => {
+            try {
+                const response = await api.get('device/')
+                console.log(response)
+                setSensorList(response.data)
+
+            }catch(error){
+                console.log(error)
+            }
+        }
+
+        getSensorList()
+
     }, [])
     
 

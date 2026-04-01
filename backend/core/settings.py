@@ -143,14 +143,23 @@ STATIC_URL = 'static/'
 # CORS and CSRF
 CORS_ALLOWED_ORIGINS    = [
     "http://localhost:5173",
+    "http://127.0.0.1:5173",
 ]
 CORS_ALLOW_CREDENTIALS  = True
-CSRF_TRUSTED_ORIGINS    = [
+CSRF_TRUSTED_ORIGINS = [
     "http://localhost:5173",
+    "http://127.0.0.1:5173",
 ]
+CSRF_COOKIE_HTTPONLY    = False
 
+SESSION_COOKIE_SAMESITE = 'Lax'
+CSRF_COOKIE_SAMESITE    = 'Lax'
+CORS_EXPOSE_HEADERS     = ['Content-Type', 'X-CSRFToken']
+CSRF_COOKIE_NAME        = 'csrftoken'
+CSRF_HEADER_NAME        = 'HTTP_X_CSRFTOKEN'
+CSRF_USE_SESSIONS       = False 
 
-
+ 
 # Django REST Framework
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
@@ -196,6 +205,7 @@ SOCIALACCOUNT_AUTO_SIGNUP           = True
 SOCIALACCOUNT_QUERY_EMAIL           = True
 SOCIALACCOUNT_EMAIL_AUTHENTICATION  = True
 ACCOUNT_ADAPTER                     = 'authentication.adapter.AccountAdapter'
+
 
 
 # JWT Token Configuration
