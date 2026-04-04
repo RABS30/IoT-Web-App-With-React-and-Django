@@ -39,6 +39,10 @@ INSTALLED_APPS = [
     'authentication',
     # Security
     'corsheaders',
+    
+    # API Documentation
+    'drf_spectacular',
+    
     # API
     'rest_framework',
     'rest_framework_simplejwt',
@@ -174,7 +178,16 @@ CSRF_USE_SESSIONS       = False
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'dj_rest_auth.jwt_auth.JWTCookieAuthentication',
-    ]
+    ],
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+# Documentation API
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Monitoring IoT Device API',
+    'DESCRIPTION': 'Dokumentasi API untuk Monitoring IoT berbasis Django dan React',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
 }
 
 
