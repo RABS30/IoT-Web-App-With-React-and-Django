@@ -136,7 +136,16 @@ USE_TZ          = True
 
 
 # Static files (CSS, JavaScript, Images)
-STATIC_URL = 'static/'
+STATIC_URL          = 'static/'
+STATICFILES_DIRS    = [
+    os.path.join(BASE_DIR, 'static')
+]   
+
+# Folder fisik di komputer tempat file disimpan
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+# URL yang digunakan untuk mengakses file di browser
+MEDIA_URL = '/media/'
+
 
 
 
@@ -191,9 +200,10 @@ REST_AUTH = {
     'JWT_AUTH_SECURE'           : False,
     'JWT_AUTH_SAMESITE'         : 'Lax',
     'JWT_AUTH_RETURN_EXPIRATION': True,
+    'OLD_PASSWORD_FIELD_ENABLED': True,
     'REGISTER_SERIALIZER'       : 'authentication.serializers.CustomRegisterSerializer',
     'PASSWORD_RESET_SERIALIZER' : 'authentication.serializers.CustomPasswordResetSerializer',
-    'OLD_PASSWORD_FIELD_ENABLED': True,
+    'USER_DETAILS_SERIALIZER'   : 'authentication.serializers.CustomUserDetailsSerializer'
 }
 # Menambahkan fitur reset password dan change password, serta memperbarui URL konfirmasi email. Memperbaiki struktur dan menambahkan komponen baru untuk pengelolaan password.
 
@@ -206,7 +216,6 @@ SOCIALACCOUNT_AUTO_SIGNUP           = True
 SOCIALACCOUNT_QUERY_EMAIL           = True
 SOCIALACCOUNT_EMAIL_AUTHENTICATION  = True
 ACCOUNT_ADAPTER                     = 'authentication.adapter.AccountAdapter'
-
 
 
 # JWT Token Configuration

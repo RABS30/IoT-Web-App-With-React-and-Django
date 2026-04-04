@@ -29,6 +29,7 @@ env
 bin
 __pycache__
 static
+media
 
 # Flowchart
 Flowchart.excalidraw

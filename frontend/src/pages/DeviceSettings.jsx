@@ -199,7 +199,6 @@ export default function DeviceSettings(){
         const getSensorList = async () => {
             try {
                 const response = await api.get('device/')
-                console.log(response)
                 setSensorList(response.data)
 
             }catch(error){

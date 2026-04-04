@@ -21,6 +21,7 @@ import ResetPasswordFormPage from "./components/authentication/ResetPasswordForm
 import EmailResetPasswordFormPage from "./components/authentication/EmailResetPasswordFormPage";
 import ChangePasswordFormPage from "./components/authentication/ChangePasswordFormPage";
 import DetailProfilePage from "./pages/DetailProfilePage";
+import UpdateDetailUserForm from "./components/authentication/UpdateDetailUserForm";
 
 
 
@@ -38,12 +39,13 @@ function App() {
 
         <Route element={<ProtectedPage />}>
             <Route path="/change-password"   element={<ChangePasswordFormPage />} />
-            <Route path="/edit-profile"      element={<ChangePasswordFormPage />} />
+            <Route path="/change-password"   element={<ChangePasswordFormPage />} />
           <Route element={<MainLayout />}>
             <Route path="/"                   element={<Dashboard />} />
             <Route path="/account"            element={<Websocket />} />
             <Route path="/device"             element={<DeviceSettings />} />
             <Route path="/profile"            element={<DetailProfilePage />} />
+            <Route path="/update-profile"     element={<UpdateDetailUserForm />} />
           </Route>
         </Route>
 
