@@ -67,7 +67,7 @@ export default function DeviceStatus({ onOffButtonClicked }) {
                       : "bg-green-500/10 text-green-400 border border-green-500/30 hover:bg-green-500 hover:text-white"
                   }`}
                 >
-                  {device.status_actuator ? "Power Off" : "Power On"}
+                  {device.status_actuator ? "Turn Off" : "Turn On"}
                 </button>
               </div>
             </div>

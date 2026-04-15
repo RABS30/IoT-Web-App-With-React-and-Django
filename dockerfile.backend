@@ -1,0 +1,63 @@
+# =========================================
+# STAGE 1: Build
+# =========================================
+FROM python:3.12-slim AS builder
+
+# Setup agar python tidak membuat cache .pyc
+ENV PYTHONDONTWRITEBYTECODE=1
+# Setup agar python menampilkan logs secara real-time
+ENV PYTHONUNBUFFERED=1
+
+# Atur working folder
+WORKDIR /app
+
+# Install build dependencies untuk psycopg2-binary bisa digunakan python dan menghapus semua list packages setelah selesai
+RUN apt-get update && apt-get install -y \
+    gcc \
+    libpq-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+
+# Kita copy requirement.txt untuk menginstall library yang dibutuhkan
+COPY ./backend/requirement.txt .
+
+# update pip dan install semua dependency yang ada di dalam requirement.txt simpan di dalam home directory
+RUN pip install --upgrade pip && \
+    pip install --user --no-cache-dir -r requirement.txt
+
+
+# =========================================
+# STAGE 2: Runtime
+# =========================================
+FROM python:3.12-slim AS runner
+
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+
+WORKDIR /app
+
+# libpq5 diperlukan agar Django bisa 'ngobrol' dengan Postgres
+RUN apt-get update && apt-get install -y \
+    libpq5 \
+    && rm -rf /var/lib/apt/lists/*
+
+# Ambil library yang sudah terinstall
+COPY --from=builder /root/.local /root/.local
+
+
+# Ambil semua code program
+COPY ./backend .
+
+# Masukkan binary program dari library ke PATH agar bisa digunakan
+ENV PATH=/root/.local/bin:$PATH
+
+# Port untuk mengakses container
+EXPOSE 8000
+
+# Jalnakn server Server
+# - Melakukan migrasi database
+# - Mengumpulkan file statis 
+# - Menjalankan server ASGI Daphne
+CMD python manage.py migrate && \
+    python manage.py collectstatic --noinput && \
+    daphne -b 0.0.0.0 -p 8000 core.asgi:application

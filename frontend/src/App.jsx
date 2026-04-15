@@ -22,6 +22,7 @@ import EmailResetPasswordFormPage from "./components/authentication/EmailResetPa
 import ChangePasswordFormPage from "./components/authentication/ChangePasswordFormPage";
 import DetailProfilePage from "./pages/DetailProfilePage";
 import UpdateDetailUserForm from "./components/authentication/UpdateDetailUserForm";
+import NotFound from "./pages/NotFound";
 
 
 
@@ -50,7 +51,10 @@ function App() {
         </Route>
 
         <Route path="/auth/google/callback/" element={<RedirectAuthGoogle />}/>
+        <Route path="*"                      element={<NotFound />}/>
       </Routes>
+
+
     </Router>
   );
 }

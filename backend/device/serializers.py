@@ -16,15 +16,6 @@ class ActuatorSerializers(serializers.ModelSerializer):
         model   = Actuator
         fields  = '__all__'
     
-# class DeviceSerializers(serializers.ModelSerializer):
-    
-#     sensor      = SensorSerializers(read_only=True)
-#     actuator    = ActuatorSerializers(read_only=True)
-    
-#     class Meta :
-#         model   = Device
-#         fields  = '__all__'
-        
         
 class DeviceSerializers(serializers.ModelSerializer):
     # Actuator Fields
@@ -79,7 +70,8 @@ class DeviceSerializers(serializers.ModelSerializer):
         
     def get_sensorTarget(self, obj):
         if hasattr(obj, 'actuator'):
-            return obj.actuator.sensorTarget.device.name
+            if obj.actuator.sensorTarget :
+                return obj.actuator.sensorTarget.device.name
         return None
     
     def get_activationValue(self, obj):
@@ -99,7 +91,8 @@ class DeviceSerializers(serializers.ModelSerializer):
     
     def get_id_sensor(self, obj):
         if hasattr(obj, 'actuator'):
-            return obj.actuator.sensorTarget.device.idDevice
+            if obj.actuator.sensorTarget :
+                return obj.actuator.sensorTarget.device.idDevice
         return None
 
     def get_maxValue(self, obj):

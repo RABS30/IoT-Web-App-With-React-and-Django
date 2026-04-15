@@ -7,7 +7,7 @@ export default function ActuatorDevice(){
 
     // GET actuator device from Django
     useEffect(() => {
-        axios.get('http://127.0.0.1:8000/device/actuator/').
+        axios.get(`/api/device/actuator/`).
         then((response) => {
             setActuator(response.data)
         })

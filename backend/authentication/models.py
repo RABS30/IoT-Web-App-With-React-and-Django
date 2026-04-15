@@ -25,7 +25,7 @@ class UserProfileModel(models.Model):
     @property
     def get_avatar_url(self):
         if self.avatar:
-            return f'http://localhost:8000{self.avatar.url}'
+            return self.avatar.url
 
         if SocialAccount.objects.filter(user=self.user).exists() :
             social  = self.user.socialaccount_set.get(provider='google')

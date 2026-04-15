@@ -1,13 +1,22 @@
 import json
 
 from django.db.models import Q
+from django.db import transaction
+from django.db import IntegrityError
+
 
 from django.http import JsonResponse
-
 
 from .models import Device, Actuator, Sensor
 from .serializers import  DeviceSerializers
 
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+
+
+
+@api_view(['GET', 'POST'])
 def DeviceListView(request, *args):
     if request.method == "GET":
         # Variable Filter
@@ -45,40 +54,59 @@ def DeviceListView(request, *args):
     
     if request.method == "POST":
         body = json.loads(request.body)
-
-
-        # New Data
+        print('ini data yang masuk : ', body)
+    # ===== CREATE DATA =====
         if body["post"] == "new":
-            
-            newDevice = Device.objects.create(name=body["name"], 
-                                              type=body["type"])
- 
-            if body['type'] == 'actuator' :
-                
-                try :
-                    sensor = Device.objects.get(idDevice=body['sensorTarget'])
-                    sensor = Sensor.objects.get(device=sensor)
+            try :
+                with transaction.atomic():
+                    # Buat device
+                    newDevice = Device.objects.create(name=body["name"], type=body["type"])
+
                     
-                    Actuator.objects.create(device=newDevice, 
-                                            status=body["status"], 
-                                            activation=body["activation"], 
-                                            sensorTarget=sensor, 
-                                            activationValue=body["activationValue"], 
-                                            comparison=body["comparison"])
-                except Exception as e:
-                    raise e
+                    # Jika tipe == Actuator
+                    if body['type'] == 'actuator' :   
+                        try :
+                            sensor = Device.objects.get(idDevice=body['sensorTarget'])
+                            sensor = Sensor.objects.get(device=sensor)
+                            actuator = Actuator.objects.create(device=newDevice, 
+                                                    status=body["status"], 
+                                                    activation=body["activation"], 
+                                                    sensorTarget=sensor, 
+                                                    activationValue=body["activationValue"], 
+                                                    comparison=body["comparison"])
+
+                        except :
+                            actuator = Actuator.objects.create(device=newDevice, 
+                                                    status=body["status"], 
+                                                    activation=body["activation"], 
+                                                    activationValue=body["activationValue"], 
+                                                    comparison=body["comparison"])
+                            
+                        
+                    # Jika tipe == Sensor
+                    if body["type"] == "sensor" :
+                        
+                        sensor = Sensor.objects.create( device=newDevice, 
+                                                        maxValue=int(body.get("maxValue") or 0), # Konversi ke int
+                                                        threshold=int(body.get("threshold") or 0),
+                                                        status=body["status"], 
+                                                        measurement=body["measurement"], 
+                                                        chart=body["chart"])
                     
-                
-                
-            if body["type"] == "sensor" :
-                Sensor.objects.create(device=newDevice, 
-                                      maxValue=body["maxValue"], 
-                                      threshold=body["threshold"], 
-                                      status=body["status"], 
-                                      measurement=body["measurement"], 
-                                      chart=body["chart"])
+            except IntegrityError as error:
+                nama = body.get('name', 'Device')
+                print(error)
+                return Response(
+                    {'message': f'"{nama}" sudah ada, tolong buat dengan nama yang berbeda'}, 
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+
+            except Exception as error :
+                print(error)
+                return Response({"message": str(error)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
             
-        # Update Status Data
+            
+    # ===== UPDATE DATA =====
         if body["post"] == "statusUpdate":
             data = Device.objects.get(idDevice=body["idDevice"])
             
@@ -90,11 +118,13 @@ def DeviceListView(request, *args):
                 actuator        = data.actuator
                 actuator.status = body["status"]
                 actuator.save()
-            
-        dataDevice = Device.objects.all()
         
+        
+    # ====== RETURN DATA =====
+        # Ambil data    
+        dataDevice = Device.objects.all()
+        # Serialisasi data
         dataDeviceSerializers = DeviceSerializers(dataDevice, many=True)           
-
         return JsonResponse(dataDeviceSerializers.data, status=200, safe=False)
 
 

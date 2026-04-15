@@ -1,7 +1,6 @@
 // import Charts from "../components/Charts";
 import DeviceStatus from "../components/devices/DeviceStatus";
 import SummaryChart from "../components/devices/SummaryChart";
-import Websocket from "../api/Websocket";
 import Charts from "../utils/Charts";
 
 

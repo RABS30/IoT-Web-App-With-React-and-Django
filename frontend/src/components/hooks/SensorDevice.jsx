@@ -8,7 +8,7 @@ export default function SensorDevice(){
 
     // GET Sensor device from Django
     useEffect(() => {
-        axios.get('http://127.0.0.1:8000/device/sensor/').
+        axios.get(`/api/device/sensor/`).
         then((response) => {
             setSensor(response.data)
         })

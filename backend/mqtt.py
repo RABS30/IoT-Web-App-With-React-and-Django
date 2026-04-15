@@ -14,7 +14,7 @@ frontend    = "monitoring/frontend"
 
 # =========================================== #
 # ============ CALLBACK FUNCTION ============ #
-
+print("===== MQTT RUNNING =====")
 # Callback saat MQTT berhasil terkoneksi 
 def onConnectCallback(client, userdata, flags, reasonCode, prop):
     # subscribe topic 
@@ -47,11 +47,11 @@ while True:
     message = {
             'type' : 'latest_data',
             'data' : [{
-                    "id"   : "3CWE7YE4CK",
+                    "id"   : "DBD37PY7NC",
                     "data" : random.randint(10, 100)
                 },
                 {
-                    "id"    : "NG9TNWSW86",
+                    "id"    : "G2XMLI70B2",
                     "data"  : random.randint(10, 100)
                 },
                 {

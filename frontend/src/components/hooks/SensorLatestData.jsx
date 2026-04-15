@@ -3,13 +3,12 @@ import { useEffect, useRef, useState } from 'react';
 export default function SensorLatestData(){
     // Reference WebSocket object
     const socket = useRef(null)
-
     // Latest Sensor Data
     const [latestData, setLatestData] = useState(null)
 
     useEffect(() => {
         // Connect to Websocket
-        socket.current  = new WebSocket('ws://127.0.0.1:8000/ws/websocket-server/')
+        socket.current  = new WebSocket(`ws://${window.location.host}/ws/websocket-server/`)
 
         // When connected to WebSocket 
         socket.current.onopen = (e) => {
@@ -19,7 +18,8 @@ export default function SensorLatestData(){
         // When get message from websocket
         socket.current.onmessage = (e) => {
             const message = JSON.parse(e.data)
-
+            console.log("Data WS masuk : ", message)
+            
             if (message.type === 'latest_data'){
                 setLatestData(message.data)
             }

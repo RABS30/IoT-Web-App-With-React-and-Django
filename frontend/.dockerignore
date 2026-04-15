@@ -1,0 +1,24 @@
+# Dependencies (Sangat berat, biarkan Docker yang install sendiri)
+node_modules/
+
+# Build files (Kita ingin build ulang di dalam Docker)
+build/
+dist/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Metadata & OS Junk
+.git
+.gitignore
+.dockerignore
+.DS_Store
+
+# Environment & Config
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local

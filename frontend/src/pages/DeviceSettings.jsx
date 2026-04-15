@@ -13,10 +13,6 @@ import api              from "../api/AxiosConfig"
 
 
 export default function DeviceSettings(){
-// ========== SUPPORTING VARIABLE ==========
-    const URL_BACKEND = "http://127.0.0.1:8000/"
-
-
 // ========== DEVICE ==========
     // Device List
     const [deviceList, setDeviceList] = useState()
@@ -83,6 +79,7 @@ export default function DeviceSettings(){
         setShowForm(show)
     }
 
+    
 // ========== FILTER ==========
     // Filter default option
     const filterOptionDefault = {
@@ -142,7 +139,8 @@ export default function DeviceSettings(){
         activation: "manual",
         comparison: ">=",
         sensorTarget: "",
-        activationValue: 0
+        activationValue: 0,
+        chart:'line',
     }
 
     // Show pop up 
@@ -155,11 +153,10 @@ export default function DeviceSettings(){
     const [sensorList, setSensorList] = useState(null) 
 
     // Create new data post to django
-    const submitNewDeviceHandler = async () => {
+    const submitNewDeviceHandler = async (e) => {
+        e.preventDefault()
         try {
-            const response = await api.post('device/', {
-                newDeviceData
-            })
+            const response = await api.post('device/', newDeviceData)
             // Send Notification success add data 
             setShowToast(prev => ({
                 ...prev,
@@ -172,16 +169,17 @@ export default function DeviceSettings(){
             // get new data list updated
             getFilteredDataHandler(false)
         }catch(error){
+        
+            const errorMessage = error.response?.data?.message || error.message;
+            const errorStatus = error.response?.status || 400;
+            
             setShowToast(prev => ({
                 ...prev,
                 showToast   : true,
                 type        : 'error',
-                status      : 'Success',
-                message     : 'Data berhasil ditambahkan'
+                status      : `Error ${errorStatus}`,
+                message     : errorMessage
             }))
-
-            // get data list 
-            getFilteredDataHandler(false)
         }
     }
 

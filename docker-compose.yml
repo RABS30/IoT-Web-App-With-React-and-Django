@@ -1,0 +1,71 @@
+services:
+  frontend:
+    build: 
+      context: .
+      dockerfile: dockerfile.frontend
+    networks:
+      - monitoring_network
+    volumes:
+      - media_volume:/var/www/media
+      - static_volume:/app/staticfiles/
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context: .
+      dockerfile: dockerfile.backend
+    environment:
+      - DATABASE_NAME=monitoringIoTDevice
+      - DATABASE_USER=postgres
+      - DATABASE_PASS=admin123
+      - DATABASE_HOST=db
+      - DATABASE_PORT=5432
+    volumes:
+      - static_volume:/app/staticfiles/
+      - media_volume:/app/media
+    networks:
+      - monitoring_network
+    depends_on:
+      - db
+
+  db:
+    image: postgres:15-alpine
+    container_name: postgres_db
+    restart: always
+    environment:
+      POSTGRES_DB: monitoringIoTDevice
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin123
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - monitoring_network
+
+  redis:
+    image: redis:7-alpine
+    networks:
+      - monitoring_network
+
+
+  mqtt:
+    build: 
+      context: .
+      dockerfile: dockerfile.backend
+    command: python worker/mqtt_worker.py
+    networks:
+      - monitoring_network
+
+
+volumes:
+  pgdata:
+  media_volume:
+  static_volume:
+
+networks:
+  monitoring_network:
+    driver: bridge

@@ -59,6 +59,7 @@ def on_connect(client, userdata, flags, reasoncode, properties=None):
 def on_message(client, userdata, message):
     try:
         payload = json.loads(message.payload.decode())
+        print("pesan masuk : ", payload)
 
         if payload["type"] == "latest_data":
 
@@ -70,13 +71,14 @@ def on_message(client, userdata, message):
                     sensor["id"],
                     sensor["data"]
                 )
-
-                # push database
-                # device = models.Device.objects.get(idDevice=sensor["id"])
-                # models.ValueSensor.objects.create(device=device, value=int(sensor["data"]))
+                device = models.Device.objects.get(idDevice=sensor['id'])
+                models.ValueSensor.objects.create(device=device, value=sensor['data'])
 
     except Exception as e:
         print("MQTT message error:", e)
+
+
+
 
 # ===================== MQTT SETUP =====================
 

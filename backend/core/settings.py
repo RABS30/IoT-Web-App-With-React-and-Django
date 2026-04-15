@@ -17,11 +17,13 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 ALLOWED_HOSTS = [
-  
+  '*'
 ]
-
+FORCE_SCRIPT_NAME = '/api'
+USE_X_FORWARDED_HOST = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 
 # Application definition
@@ -140,10 +142,22 @@ USE_TZ          = True
 
 
 # Static files (CSS, JavaScript, Images)
-STATIC_URL          = 'static/'
-STATICFILES_DIRS    = [
-    os.path.join(BASE_DIR, 'static')
-]   
+# 1. URL untuk akses via browser
+STATIC_URL = 'static/'
+
+# 2. FOLDER TUJUAN (PENTING UNTUK DOCKER)
+# Jalur ini harus sama dengan yang ada di Dockerfile/Docker Compose
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# 3. (Opsional) Jika Anda punya folder static tambahan di luar aplikasi
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
+
+# settings.py
+DATA_UPLOAD_MAX_MEMORY_SIZE = 10485760  # 10MB dalam bytes
+FILE_UPLOAD_MAX_MEMORY_SIZE = 10485760
+
 
 # Folder fisik di komputer tempat file disimpan
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -197,7 +211,7 @@ CHANNEL_LAYERS = {
     "default" : {
         "BACKEND"   : "channels_redis.core.RedisChannelLayer",
         "CONFIG"    : {
-            "hosts"     : [("127.0.0.1", 6379)]   
+            "hosts"     : [("redis", 6379)]   
         } 
     }
 } 
@@ -254,7 +268,15 @@ EMAIL_HOST_PASSWORD = os.getenv("GOOGLE_PASSWORD")
 
 
 
- 
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'APP': {
+            'client_id': os.getenv('GOOGLE_CLIENT_ID'),
+            'secret': os.getenv('GOOGLE_SECRET_KEY'),
+            'key': '' 
+        }
+    }
+}
 
 
 
