@@ -1,134 +1,35 @@
 // React Utilities
-import { useEffect, useState } from "react"
-import axios from "axios"
-
+import { useEffect, useState, useCallback } from "react"
 
 // Component
-import SearchAndFilter  from "../components/devices/SearchAndFilter"
-import SensorCards      from "../components/devices/SensorCards"
-import ActuatorCards    from "../components/devices/ActuatorCards"
-import NewDeviceForm    from "../components/devices/NewDeviceForm"
-import Toast            from "../utils/Toast"
-import api              from "../api/AxiosConfig"
+import SearchAndFilter from "../components/devices/SearchAndFilter"
+import SensorCards from "../components/devices/SensorCards"
+import ActuatorCards from "../components/devices/ActuatorCards"
+import NewDeviceForm from "../components/devices/NewDeviceForm"
+import Toast from "../utils/Toast"
+import api from "../api/AxiosConfig"
 
-
-export default function DeviceSettings(){
-// ========== DEVICE ==========
-    // Device List
-    const [deviceList, setDeviceList] = useState()
-
-    // Pop up add new device
-    const [showForm, setShowForm] = useState(false)
-
-    // Device Status Update
-    const statusDeviceChangeHandler = async (idDevice, type, status) => {
-        try{
-            const response = await api.post('device/', {
-                post    : "statusUpdate",
-                idDevice: idDevice,
-                type    : type, 
-                status  : !status 
-            })
-
-            // refresh list data
-            getFilteredDataHandler(null, true, 'Berhasil update data');
-
-        }catch(error){
-            setShowToast(prev => ({
-                ...prev,
-                showToast   : true,
-                type        : 'error',
-                status      : error.status,
-                message     : error.message
-            }))
-        }
-    } 
-
-    // Get First time data list
-    useEffect(() => {
-        const getDataFirstTime = async () => {
-            try{
-                const response = await api.get('device/')
-                // Kirim notifikasi melalui toast
-                setShowToast(prev => ({
-                    ...prev,
-                    showToast   : true,
-                    type        : 'success',
-                    status      : 'Success',
-                    message     : 'Berhasil mengambil data'
-                }))
-                // Menyimpan data list device
-                setDeviceList(response.data)
-
-            }catch(error){
-                // Mengirim notifikasi error menggunakan toast
-                setShowToast(prev => ({
-                    ...prev,
-                    showToast   : true,
-                    type        : 'error',
-                    status      : error.status,
-                    message     : error.message
-                }))
-            }
-        }
-        getDataFirstTime()
-    }, [])
-
-    // Active pop up form to add new device
-    const showPopUpAddDevice = (show) => {
-        setShowForm(show)
-    }
-
+export default function DeviceSettings() {
+    // ========== STATES ==========
+    const [deviceList, setDeviceList] = useState([]);
+    const [sensorList, setSensorList] = useState([]); // Untuk dropdown di NewDeviceForm
+    const [showAddModal, setShowAddModal] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false); // Loading state untuk tombol
     
-// ========== FILTER ==========
-    // Filter default option
-    const filterOptionDefault = {
-        type    : 'all',
-        status  : 'all',
-        search  : ''
-    } 
-    // Filter option
-    const [filterOption, setFilterOption] = useState(filterOptionDefault)
-    // Handler for change value in filterOption
-    const changeFilterOptionHandler = (e) => {
-        const {id, value} = e.target
+    const [showToast, setShowToast] = useState({
+        showToast: false,
+        type: 'success',
+        status: 'Success',
+        message: 'Berhasil'
+    });
 
-        setFilterOption(prev => ({
-            ...prev, [id]: value
-        }))
-    }
-    // Get filtered data from django
-    const getFilteredDataHandler = async (e, show=false, messageCustom='Berhasil mengambil data', filter=filterOption) => {
-        try{
-            const response = await api.get('device/', {
-                params: filter
-            })
-            // Kirim notifikasi melalui toast
-            setShowToast(prev => ({
-                ...prev,
-                showToast   : show,
-                type        : 'success',
-                status      : 'Success',
-                message     : messageCustom
-            }))
+    const [filterOption, setFilterOption] = useState({
+        type: 'all',
+        status: 'all',
+        search: ''
+    });
 
-            // Menyimpan list device yang sudah di filter
-            setDeviceList(response.data)
-        }catch(error){
-            setShowToast(prev => ({
-                ...prev,
-                showToast   : show,
-                type        : 'error',
-                status      : error.status,
-                message     : error.message
-            }))
-        }
-    }
-
-
-// ========== ADD NEW DEVICE ==========
-    // Default new device data
-    const newDevice = {
+    const [newDeviceData, setNewDeviceData] = useState({
         post: "new",
         name: "",
         status: true,
@@ -140,115 +41,168 @@ export default function DeviceSettings(){
         comparison: ">=",
         sensorTarget: "",
         activationValue: 0,
-        chart:'line',
-    }
+        chart: 'line',
+    });
 
-    // Show pop up 
-    const [showAddModal, setShowAddModal] = useState(false)
-    
-    // New device configuration
-    const [newDeviceData, setNewDeviceData] = useState(newDevice)
-    
-    // List Sensor Device
-    const [sensorList, setSensorList] = useState(null) 
+    // ========== HANDLERS ==========
 
-    // Create new data post to django
-    const submitNewDeviceHandler = async (e) => {
-        e.preventDefault()
+    // Fungsi Fetch Data (Gunakan useCallback agar bisa dipanggil di useEffect & handler lain)
+    const fetchDevices = useCallback(async (showNotification = false, message = 'Data diperbarui') => {
         try {
-            const response = await api.post('device/', newDeviceData)
-            // Send Notification success add data 
-            setShowToast(prev => ({
-                ...prev,
-                showToast   : true,
-                type        : 'error',
-                status      : 'Success',
-                message     : 'Data berhasil ditambahkan'
-            }))
-    
-            // get new data list updated
-            getFilteredDataHandler(false)
-        }catch(error){
-        
-            const errorMessage = error.response?.data?.message || error.message;
-            const errorStatus = error.response?.status || 400;
+            const response = await api.get('device/', { params: filterOption });
+            setDeviceList(response.data);
             
-            setShowToast(prev => ({
-                ...prev,
-                showToast   : true,
-                type        : 'error',
-                status      : `Error ${errorStatus}`,
-                message     : errorMessage
-            }))
-        }
-    }
+            // Juga update sensorList jika tipenya sensor (untuk dropdown form)
+            const sensorsOnly = response.data.filter(d => d.type === 'sensor');
+            setSensorList(sensorsOnly);
 
-    // Change form value
-    const handleFormChange = (e) => {
-        const {name, value} = e.target
-
-        setNewDeviceData(prev => ({
-            ...prev, [name]: (value === 'true' ? true : value === 'false' ? false : value)
-        }))
-    }
-
-    // Get device sensor for first time
-    useEffect(() => {
-        const getSensorList = async () => {
-            try {
-                const response = await api.get('device/')
-                setSensorList(response.data)
-
-            }catch(error){
-                console.log(error)
+            if (showNotification) {
+                setShowToast({
+                    showToast: true,
+                    type: 'success',
+                    status: 'Success',
+                    message: message
+                });
             }
+        } catch (error) {
+            setShowToast({
+                showToast: true,
+                type: 'error',
+                status: `Error ${error.response?.status || 'Network'}`,
+                message: error.message
+            });
         }
+    }, [filterOption]);
 
-        getSensorList()
+    // Ambil data pertama kali saat mount
+    useEffect(() => {
+        fetchDevices();
+    }, []); // Run sekali saja
 
-    }, [])
-    
+    // Update status (Optimistic Update agar UI tidak delay)
+    const statusDeviceChangeHandler = async (idDevice, type, status) => {
+        // Kita tambahkan pengecekan loading agar tidak bisa klik berkali-kali dalam waktu singkat
+        if (isSubmitting) return;
 
-// ========== TOAST ==========
-    // Message default for toast
-    const [showToast, setShowToast] = useState({
-        showToast   : false,
-        type        : 'success',
-        status      : 'Success',
-        message     : 'Berhasil'
+        try {
+            setIsSubmitting(true);
+            const response = await api.post('device/', {
+                post: "statusUpdate",
+                idDevice: idDevice,
+                type: type,
+                status: !status // Mengirim kebalikan dari status saat ini
+            });
 
-    })
+            // HANYA refresh data jika request POST berhasil (200 OK)
+            // Gunakan fungsi fetch yang sudah ada agar UI terupdate sesuai DB
+            await fetchDevices(true, 'Berhasil update status');
+
+        } catch (error) {
+            setShowToast({
+                showToast: true,
+                type: 'error',
+                status: `Error ${error.response?.status || 'Unknown'}`,
+                message: error.response?.data?.message || 'Gagal mengubah status'
+            });
+        } finally {
+            setIsSubmitting(false);
+        }
+    }
+
+    const submitNewDeviceHandler = async (e) => {
+        e.preventDefault();
+        if (isSubmitting) return;
+
+        setIsSubmitting(true);
+        try {
+            await api.post('device/', newDeviceData);
+            setShowAddModal(false);
+            setShowToast({
+                showToast: true,
+                type: 'success',
+                status: 'Success',
+                message: 'Device baru berhasil ditambahkan'
+            });
+            fetchDevices(); // Refresh list
+            // Reset Form
+            setNewDeviceData({ ...newDeviceData, name: "", maxValue: "", threshold: "", measurement: "" });
+        } catch (error) {
+            setShowToast({
+                showToast: true,
+                type: 'error',
+                status: 'Error',
+                message: error.response?.data?.message || 'Gagal menambahkan device'
+            });
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
+    const handleFormChange = (e) => {
+        const { name, value } = e.target;
+        setNewDeviceData(prev => ({
+            ...prev, 
+            [name]: (value === 'true' ? true : value === 'false' ? false : value)
+        }));
+    };
+
+    const changeFilterOptionHandler = (e) => {
+        const { id, value } = e.target;
+        setFilterOption(prev => ({ ...prev, [id]: value }));
+    };
+
+    // Trigger filter saat filterOption berubah
+    const getFilteredDataHandler = (e) => {
+        if (e) e.preventDefault();
+        fetchDevices(true, 'Filter diterapkan');
+    };
 
     return (
         <div className="min-h-screen w-full bg-gray-950 flex flex-col items-center p-4 relative overflow-hidden">
-            {/* ===== Background Decorative Blobs ===== */}
+            {/* Background Blobs */}
             <div className="absolute -top-40 -left-40 w-96 h-96 bg-indigo-700 rounded-full opacity-30 blur-[100px] pointer-events-none"></div>
             <div className="absolute top-1/3 -right-20 w-80 h-80 bg-fuchsia-600 rounded-full opacity-25 blur-[90px] pointer-events-none"></div>
-            <div className="absolute -bottom-32 left-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-blue-600 rounded-full opacity-20 blur-[120px] pointer-events-none"></div>
 
             <div className="z-10 w-full max-w-7xl space-y-6">
-                {/* Toast */}
-                <Toast showToast={showToast['showToast']} setShowToast={setShowToast} type={showToast['type']} message={showToast['message']} status={showToast['status']}/>
+                <Toast 
+                    showToast={showToast.showToast} 
+                    setShowToast={(val) => setShowToast(prev => ({ ...prev, showToast: val }))} 
+                    type={showToast.type} 
+                    message={showToast.message} 
+                    status={showToast.status} 
+                />
                 
-                {/* Add New Device Form */}
-                <NewDeviceForm showAddModal={showAddModal} setShowAddModal={setShowAddModal} submitNewDeviceHandler={submitNewDeviceHandler} handleFormChange={handleFormChange} newDevice={newDeviceData} sensorList={sensorList} />
+                <NewDeviceForm 
+                    showAddModal={showAddModal} 
+                    setShowAddModal={setShowAddModal} 
+                    submitNewDeviceHandler={submitNewDeviceHandler} 
+                    handleFormChange={handleFormChange} 
+                    newDevice={newDeviceData} 
+                    sensorList={sensorList}
+                    loading={isSubmitting} 
+                />
 
-                {/* Search and Filter - Dibungkus container transparan agar senada */}
                 <div className="bg-white/5 backdrop-blur-sm rounded-2xl border border-white/10 p-2">
-                    <SearchAndFilter changeFilterOptionHandler={changeFilterOptionHandler} filterOption={filterOption} getFilteredDataHandler={getFilteredDataHandler} setShowAddModal={setShowAddModal} />
+                    <SearchAndFilter 
+                        changeFilterOptionHandler={changeFilterOptionHandler} 
+                        filterOption={filterOption} 
+                        getFilteredDataHandler={getFilteredDataHandler} 
+                        setShowAddModal={setShowAddModal} 
+                    />
                 </div>
                 
-                {/* Device Cards - Mengubah bg-gray-100 menjadi transparan/glassmorphism */}
                 <div className="grid grid-cols-1 rounded-2xl md:grid-cols-5 gap-6 p-6 bg-white/5 backdrop-blur-md border border-white/10 shadow-2xl">   
-                    {deviceList?.map((device) => (
+                    {deviceList.length > 0 ? deviceList.map((device) => (
                         device.type === 'sensor' ? (
                             <SensorCards key={device.idDevice} device={device} statusDeviceChangeHandler={statusDeviceChangeHandler}/>
-                        ) : device.type === 'actuator' ? (
+                        ) : (
                             <ActuatorCards key={device.idDevice} device={device} statusDeviceChangeHandler={statusDeviceChangeHandler} />
-                        ) : null
-                    ))}
+                        )
+                    )) : (
+                        <p className="text-white col-span-full text-center opacity-50">Tidak ada perangkat ditemukan.</p>
+                    )}
                 </div>
             </div>
         </div>
-    )
+    );
 }

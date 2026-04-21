@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import api from "../../api/AxiosConfig";
 
 export default function ActuatorDevice(){
     // save actuator device
@@ -7,7 +8,7 @@ export default function ActuatorDevice(){
 
     // GET actuator device from Django
     useEffect(() => {
-        axios.get(`/api/device/actuator/`).
+        api.get(`device/actuator/`).
         then((response) => {
             setActuator(response.data)
         })

@@ -10,7 +10,7 @@ export default function DeviceStatus({ onOffButtonClicked }) {
       <div className="bg-white/5 backdrop-blur-md border border-white/10 shadow-2xl rounded-2xl p-4 sm:p-6">
         <h2 className="text-lg font-bold text-white mb-6 flex items-center gap-3">
           <span className="w-1.5 h-6 bg-fuchsia-500 rounded-full shadow-[0_0_10px_#d946ef]"></span>
-          Aktuator Control Center
+          Aktuator Control Panel
         </h2>
         
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6">

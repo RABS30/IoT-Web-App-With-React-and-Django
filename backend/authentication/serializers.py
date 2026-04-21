@@ -44,22 +44,17 @@ class CustomUserProfileSerializer(serializers.ModelSerializer):
         model  = UserProfileModel
         fields = ('avatar', )
         
+    # Data yang akan dikirim ke frontend
     def to_representation(self, instance):
+        # Mengambil semua data yang sudah diserialisasi
         representation = super().to_representation(instance)
+        # Mengammbil request untuk build_request_uri
         request = self.context.get('request')
-        
+        # Mengambil url avatar
         avatar_path = instance.get_avatar_url
-        
-        if avatar_path and not avatar_path.startswith('http'):
-            if request is not None:
-                representation['avatar'] = request.build_absolute_uri(avatar_path)
-            else:
-                # Fallback jika request tidak ada (misal di background task)
-                import os
-                domain = os.getenv('BACKEND_URL', 'http://localhost:8000')
-                representation['avatar'] = f"{domain}{avatar_path}"
-        else:
-            representation['avatar'] = avatar_path
+        # Mengganti avatar yang akan ditampilkan
+        representation['avatar'] = request.build_absolute_uri(avatar_path)
+
         return representation
         
 

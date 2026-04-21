@@ -6,7 +6,7 @@ export default function Websocket(){
 
     useEffect(() => {
         // Connect to WebSocket
-        socket.current = new WebSocket(`ws://${window.location.host}/ws/websocket-server/`)
+        socket.current = new WebSocket(`wss://${window.location.host}/ws/websocket-server/`)
 
         // Function when websocket connected
         socket.current.onopen = () => {

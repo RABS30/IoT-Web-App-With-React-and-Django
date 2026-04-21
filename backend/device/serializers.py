@@ -11,7 +11,7 @@ class SensorSerializers(serializers.ModelSerializer):
         
 
 class ActuatorSerializers(serializers.ModelSerializer):
-    sensorTarget = SensorSerializers(read_only=True)
+    
     class Meta :
         model   = Actuator
         fields  = '__all__'

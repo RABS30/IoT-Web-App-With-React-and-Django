@@ -47,31 +47,27 @@ while True:
     message = {
             'type' : 'latest_data',
             'data' : [{
-                    "id"   : "DBD37PY7NC",
+                    "id"   : "G2XMLI70B2",
                     "data" : random.randint(10, 100)
                 },
                 {
-                    "id"    : "G2XMLI70B2",
+                    "id"    : "DBD37PY7NC",
                     "data"  : random.randint(10, 100)
                 },
                 {
-                    "id"    : "A093GWIAMP",
+                    "id"    : "QZRVZUSXXG",
                     "data"  : random.randint(10, 100)
                 },
                 {
-                    "id"    : "6VLSODF9GD",
+                    "id"    : "1Z1R9O0OCN",
                     "data"  : random.randint(10, 100)
                 },
                 {
-                    "id"    : "42UFEZ6E02",
+                    "id"    : "RG19R6FSMW",
                     "data"  : random.randint(10, 100)
                 },
                 {
-                    "id"   : "KC5D1TK2O8",
-                    "data" : random.randint(10, 100)
-                },
-                {
-                    "id"   : "2ZDHC0NP5Q",
+                    "id"   : "MBB5G2C245",
                     "data" : random.randint(10, 100)
                 },
                 ]

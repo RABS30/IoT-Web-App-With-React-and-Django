@@ -16,7 +16,7 @@ from rest_framework.decorators import api_view
 
 
 
-@api_view(['GET', 'POST'])
+@api_view(['GET', 'POST', 'PATCH'])
 def DeviceListView(request, *args):
     if request.method == "GET":
         # Variable Filter
@@ -25,7 +25,7 @@ def DeviceListView(request, *args):
         search_filter   = request.GET.get("search")
         
         # Ambil semua object
-        devices         = Device.objects.all()
+        devices         = Device.objects.all().order_by("-id")
 
         # Filter type device
         if type_filter and type_filter != "all" :  
@@ -127,7 +127,11 @@ def DeviceListView(request, *args):
         dataDeviceSerializers = DeviceSerializers(dataDevice, many=True)           
         return JsonResponse(dataDeviceSerializers.data, status=200, safe=False)
 
-
+    if request.method == 'PATCH':
+        data = json.loads(request.body)
+        print('PATCH : ', data)
+        
+        
 def TypeListView(request, type, *args):
     if request.method == "GET":
         deviceList = Device.objects.select_related(

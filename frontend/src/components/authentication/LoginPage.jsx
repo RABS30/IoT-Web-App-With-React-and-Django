@@ -96,6 +96,7 @@ export default function LoginPage() {
                     type="email"
                     name="email"
                     id="email"
+                    autoComplete='current-email'
                     value={credentials.email}
                     onChange={handleLoginCredentials}
                     className="bg-gray-50 border border-gray-300 text-gray-900 rounded-xl focus:ring-blue-600 focus:border-blue-600 block w-full p-3 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 transition-all"
@@ -110,6 +111,7 @@ export default function LoginPage() {
                     <input
                     type="password"
                     name="password"
+                    autoComplete="current-password"
                     id="password"
                     value={credentials.password}
                     placeholder="Password"
