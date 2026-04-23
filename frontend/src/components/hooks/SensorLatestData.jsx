@@ -8,7 +8,7 @@ export default function SensorLatestData(){
 
     useEffect(() => {
         // Connect to Websocket
-        socket.current  = new WebSocket(`ws://${window.location.host}/api/ws/websocket-server/`)
+        socket.current  = new WebSocket(`wss://${window.location.host}/api/ws/websocket-server/`)
 
         // When connected to WebSocket 
         socket.current.onopen = (e) => {

@@ -59,7 +59,7 @@ EXPOSE 8000
 # - Melakukan migrasi database
 # - Mengumpulkan file statis 
 # - Menjalankan server ASGI Daphne
-CMD python manabge.py makemigrations && \
+CMD python manage.py makemigrations && \
     python manage.py migrate && \
     python manage.py collectstatic --noinput && \
     daphne -b 0.0.0.0 -p 8000 core.asgi:application

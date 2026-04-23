@@ -53,7 +53,7 @@ class CustomUserProfileSerializer(serializers.ModelSerializer):
     # Data yang akan dikirim ke frontend
     def to_representation(self, instance):
         # jika belum memiliki avatar maka return langsung
-        if avatar_path == '' :
+        if instance.get_avatar_url == '' :
             return 
         
         # Mengambil semua data yang sudah diserialisasi

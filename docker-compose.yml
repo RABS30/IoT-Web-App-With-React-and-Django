@@ -8,8 +8,10 @@ services:
     volumes:
       - media_volume:/var/www/media
       - static_volume:/app/staticfiles/
+      - ./nginx/ssl:/etc/nginx/ssl
     ports:
       - "80:80"
+      - "443:443"
     depends_on:
       - backend
 
