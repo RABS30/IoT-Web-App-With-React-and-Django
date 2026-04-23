@@ -9,11 +9,15 @@ import paho.mqtt.client as mqtt
 from redis_worker import redis_client
 from channels.layers import get_channel_layer
 
+
+
+
 # ===================== MQTT CONFIG =====================
 MQTT_SERVER = "broker.emqx.io"
 MQTT_PORT = 1883
 MQTT_KEEPALIVE = 60
 MQTT_SUBSCRIBE = "monitoring/backend"
+
 
 # ===================== DJANGO SETUP =====================
 project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -25,6 +29,7 @@ django.setup()
 from device import models
 
 channel_layer = get_channel_layer()
+
 
 # ===================== WEBSOCKET BROADCAST =====================
 
@@ -45,6 +50,8 @@ async def broadcast_latest_data():
             print("Broadcast error:", e)
 
         await asyncio.sleep(1)
+
+
 
 # ===================== MQTT CALLBACK =====================
 
@@ -79,7 +86,6 @@ def on_message(client, userdata, message):
 
 
 
-
 # ===================== MQTT SETUP =====================
 
 client = mqtt.Client()
@@ -95,6 +101,7 @@ def mqtt_loop():
 mqtt_thread = threading.Thread(target=mqtt_loop)
 mqtt_thread.daemon = True
 mqtt_thread.start()
+
 
 # ===================== RUN ASYNC LOOP =====================
 

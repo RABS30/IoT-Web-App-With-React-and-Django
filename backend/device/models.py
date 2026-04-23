@@ -8,7 +8,6 @@ class Device(models.Model) :
     name    = models.CharField(verbose_name="Device", max_length=100, unique=True)
     type    = models.CharField(verbose_name="Type", max_length=10, choices=[("sensor", "Sensor"), ("actuator", "Actuator")])
     
-    
     def save(self, *args, **kwargs):
         if not self.idDevice :
             self.idDevice = self.generateUniqueID()
@@ -23,6 +22,9 @@ class Device(models.Model) :
             
     def __str__(self):
         return f"{self.name}, {self.idDevice}"
+    
+    
+    
     
 class Sensor(models.Model):
     device      = models.OneToOneField(Device, verbose_name="Device", on_delete=models.CASCADE, limit_choices_to={'type': 'sensor'}, related_name="sensor", to_field='idDevice')
@@ -40,20 +42,24 @@ class Sensor(models.Model):
     def __str__(self):
         return f"{self.device}"
 
+
+
+
 class ValueSensor(models.Model):
     device  = models.ForeignKey(Device, verbose_name="Device", on_delete=models.CASCADE, limit_choices_to={"type": "sensor"}, related_name="value", to_field='idDevice')
     value   = models.IntegerField(verbose_name="Value Sensor", default=0)
     date    = models.DateTimeField(verbose_name="Date", auto_now_add=True, editable=False)
     
-# ======================= SETUP MQTT =======================
     def save(self, *args, **kwargs):
         if self.device.type == "sensor":
             return super().save(*args, **kwargs)    
         raise ValueError("Type device must sensor")
-
     
     def __str__(self):
         return f"{self.device} = {self.value}"
+              
+              
+              
               
 class Actuator(models.Model):
     device          = models.OneToOneField(Device, verbose_name= "Device", on_delete=models.CASCADE, limit_choices_to={'type': 'actuator'}, related_name='actuator', to_field='idDevice')

@@ -18,7 +18,7 @@ export default function SensorLatestData(){
         // When get message from websocket
         socket.current.onmessage = (e) => {
             const message = JSON.parse(e.data)
-            console.log("Data WS masuk : ", message)
+            console.log("Data dari websocket masuk : ", message)
             
             if (message.type === 'latest_data'){
                 setLatestData(message.data)

@@ -8,10 +8,15 @@ export default function SensorDevice(){
 
     // GET Sensor device from Django
     useEffect(() => {
-        axios.get(`/api/device/sensor/`).
-        then((response) => {
-            setSensor(response.data)
-        })
+        const sensor = async () => {
+            try {
+                const response = await axios.get(`/api/device/sensor/`);
+                setSensor(response.data);
+            } catch (error) {
+                console.error("Error fetching sensor data:", error);
+            }
+        };
+        sensor();
     }, [])
     
     return sensor

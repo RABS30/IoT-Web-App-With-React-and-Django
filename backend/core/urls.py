@@ -30,12 +30,11 @@ urlpatterns = [
 
 
     # File skema YAML (Otak dari dokumentasinya)
-    path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
+    path('schema/', SpectacularAPIView.as_view(), name='schema'),
     
     # Tampilan UI (Pilih salah satu atau keduanya)
-    path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'), # Favorit rekruter
-    path('api/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
-
+    path('docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'), # Favorit rekruter
+    path('redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
 ]
 
 

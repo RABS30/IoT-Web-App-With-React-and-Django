@@ -81,6 +81,12 @@ anthropic/
 # =========================================
 # 8. Docker Files
 # =========================================
-# Kadang Dockerfile & Compose tidak perlu ikut dicopy ke dalam Image sendiri
 Dockerfile
 docker-compose*
+
+
+# =========================================
+# 9. React Environment Files
+# =========================================
+.env.development
+.env.production

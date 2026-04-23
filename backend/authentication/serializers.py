@@ -13,6 +13,12 @@ from django.utils.translation import gettext_lazy as _
 
 from .models import UserProfileModel
 
+
+import os
+
+from dotenv import load_dotenv
+load_dotenv()
+
 class CustomRegisterSerializer(RegisterSerializer):
     # Validasi email saat pengguna membuat akun baru (satu email untuk satu akun)
     def validate_email(self, email):
@@ -26,9 +32,9 @@ class CustomRegisterSerializer(RegisterSerializer):
     
 
 class CustomPasswordResetSerializer(PasswordResetSerializer):
-    # Mengubah urls yang dikirim melalui gmail untuk pengguna reset password 
+    # Urls yang dikirim melalui gmail untuk pengguna reset password 
     def url_generator(self, request, user, temp_key):
-        path = f'http://localhost:5173/new-password/{user_pk_to_url_str(user)}/{temp_key}/'
+        path = f'{os.getenv('HOSTNAME')}/new-password/{user_pk_to_url_str(user)}/{temp_key}/'
 
         path = path.replace('%3F', '?')
 
@@ -46,6 +52,10 @@ class CustomUserProfileSerializer(serializers.ModelSerializer):
         
     # Data yang akan dikirim ke frontend
     def to_representation(self, instance):
+        # jika belum memiliki avatar maka return langsung
+        if avatar_path == '' :
+            return 
+        
         # Mengambil semua data yang sudah diserialisasi
         representation = super().to_representation(instance)
         # Mengammbil request untuk build_request_uri

@@ -19,7 +19,7 @@ export default function NotFound() {
         
         <div className="mt-8">
           <p className="text-gray-400 text-lg mb-8">
-            Waduh rabs, sepertinya kamu tersesat di koordinat yang salah.
+            Waduh!!!, sepertinya kamu tersesat di jalan yang salah.
           </p>
           
           <Link

@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import axios from "axios"; 
 
 import Toast from "../Toast";
+import api from "../../api/AxiosConfig";
 
 export default function DeviceCards() {
 {/* ================= VARIABLE AND STATE ================= */}
@@ -54,71 +55,58 @@ export default function DeviceCards() {
 {/* ================= GET API FIRST TIME ================= */}
   // GET Data Device first time
   useEffect(() => {
-    axios.get('http://127.0.0.1:8000/device/', {
-      params: filterSearch
-    })
-    .then(function (response) {
-      triggerToast(true, "success", "Success!!", "Data berhasil diambil")
-      // handle success
-      setDevices(response.data)
-      })
-    .catch(function (error) {
-        // handle error
+    const getDataDevice = async () => {
+      try {
+        const response = await api.get("device/", {
+          params: filterSearch
+        })
+        setDevices(response.data)
+        triggerToast(true, "success", "Success!!", "Data berhasil diambil")
+      }catch(error) {
         triggerToast(true, "error", `${error.status} ${error.message}`, "Data gagal diambil")
-    })
-    .finally(function () {
-        // always executed
-    });
+      }
+    }
+    getDataDevice()
   }, [])
 
 {/* ================= REST API  ================= */}
   // GET = Get data filter and search
-  const filterButtonClicked = () => {
-    axios.get("http://127.0.0.1:8000/device/", {
-      params: filterSearch
-    })
-    .then((res) => {
-      setDevices(res.data)
-      setFilterSearch({...filterSearch, search: ""})
-    })
-    .catch((err) => {
-      console.log(err)
-    })
+  const filterButtonClicked = async () => {
+
+    try {
+        const response = await api.get("device/", {
+          params: filterSearch
+        })
+        setDevices(response.data)
+        setFilterSearch({...filterSearch, search: ""})
+    }catch(error) {
+      triggerToast(true, "error", `${error.status} ${error.message}`, "Data gagal diambil")
+    }
+
   }  
 
 // POST = Turn On/Off status Device
-  const onOffButtonClicked = (idDevice, type, status) => {
-    axios.post("http://127.0.0.1:8000/device/", {
-      post: "statusUpdate",
-      idDevice: idDevice,
-      type: type,
-      status: !status,
-    })
-    .then((res) => {
+  const onOffButtonClicked = async(idDevice, type, status) => {
+    try {
+      const response = await api.post("device/", {
+        post: "statusUpdate",
+        idDevice: idDevice,
+        type: type,
+        status: !status,
+      })
+
       filterButtonClicked()
       triggerToast(true, "success", "Success", "Data berhasil diperbarui")
-    })
-    .catch((error) => {
-      <div id="alert-1" class="flex sm:items-center p-4 mb-4 text-sm text-fg-brand-strong rounded-base bg-brand-softer" role="alert">
-        <svg class="w-4 h-4 shrink-0 mt-0.5 md:mt-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11h2v5m-2 0h4m-2.592-8.5h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>
-        <span class="sr-only">Info</span>
-        <div class="ms-2 text-sm">
-          A simple info alert with an <a href="#" class="font-medium underline hover:no-underline">example link</a>. Give it a click if you like.
-        </div>
-          <button type="button" class="ms-auto -mx-1.5 -my-1.5 rounded focus:ring-2 focus:ring-brand-medium hover:bg-brand-soft inline-flex items-center justify-center h-8 w-8 shrink-0 shrink-0" data-dismiss-target="#alert-1" aria-label="Close">
-            <span class="sr-only">Close</span>
-            <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18 17.94 6M18 18 6.06 6"/></svg>
-        </button>
-      </div>
-      triggerToast(true, "error", `${error.status} ${error.message}`, "Data gagal diperbarui")
 
-    })
+    }catch(error) {
+      triggerToast(true, "error", `${error.status} ${error.message}`, "Data gagal diperbarui")
+    }
   }
 
   // POST = Create New Device
-  const submitNewDevice = () => {
-    axios.post("http://127.0.0.1:8000/device/", newDevice).then((res) => {
-      triggerToast(true, "success", "Success", "Data berhasil ditambah")
+  const submitNewDevice = async () => {
+    try {
+      const response = await api.get("device/")
 
       // GET data filtered
       filterButtonClicked()
@@ -138,11 +126,10 @@ export default function DeviceCards() {
         sensorTarget: "",
         activationValue: 0
       })
-
-    }).catch((error) => {
+      
+    }catch (error) {
       triggerToast(true, "error", `${error.status} ${error.message}`, "Data gagal ditambahkan")
-
-    })
+    }
   }
 
 {/* ================= FUNCTION UTILITIES ================= */}

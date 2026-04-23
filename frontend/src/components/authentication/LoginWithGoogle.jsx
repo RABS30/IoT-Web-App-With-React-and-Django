@@ -5,7 +5,7 @@ import React from 'react';
 const GOOGLE_CLIENT_ID = '26929392258-fsdqf6rg58pgv2to6ddsbah3ertcu7rc.apps.googleusercontent.com';
 
 // URL Callback di React Anda (pastikan ini didaftarkan di Google Console)
-const REDIRECT_URI = 'http://localhost/auth/google/callback/'; 
+const REDIRECT_URI = `${window.location.protocol}://${window.location.host}/auth/google/callback`;
 
 export default function LoginWithGoogle() {
   const handleGoogleLogin = () => {
