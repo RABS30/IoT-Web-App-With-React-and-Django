@@ -34,7 +34,7 @@ class CustomRegisterSerializer(RegisterSerializer):
 class CustomPasswordResetSerializer(PasswordResetSerializer):
     # Urls yang dikirim melalui gmail untuk pengguna reset password 
     def url_generator(self, request, user, temp_key):
-        path = f'{os.getenv('HOSTNAME')}/new-password/{user_pk_to_url_str(user)}/{temp_key}/'
+        path = f'{os.getenv('MY_SITE_URL')}/new-password/{user_pk_to_url_str(user)}/{temp_key}/'
 
         path = path.replace('%3F', '?')
 

@@ -46,7 +46,7 @@ services:
       - monitoring_network
 
 
-  mqtt:
+  mqtt_worker:
     build: 
       context: .
       dockerfile: dockerfile.backend

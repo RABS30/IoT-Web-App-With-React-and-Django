@@ -171,11 +171,11 @@ FILE_UPLOAD_MAX_MEMORY_SIZE = 10485760
 # ==============================================================================
 # CORS & CSRF
 # ==============================================================================
-CORS_ALLOWED_ORIGINS   = ["http://localhost:5173", "http://127.0.0.1:5173", os.getenv('HOSTNAME')]
+CORS_ALLOWED_ORIGINS   = ["http://localhost:5173", "http://127.0.0.1:5173", os.getenv('MY_SITE_URL')]
 CORS_ALLOW_CREDENTIALS = True
 CORS_EXPOSE_HEADERS    = ['Content-Type', 'X-CSRFToken']
     
-CSRF_TRUSTED_ORIGINS    = ["http://localhost:5173", "http://127.0.0.1:5173",os.getenv('HOSTNAME')]
+CSRF_TRUSTED_ORIGINS    = ["http://localhost:5173", "http://127.0.0.1:5173",os.getenv('MY_SITE_URL')]
 CSRF_COOKIE_HTTPONLY    = False
 CSRF_COOKIE_NAME        = 'csrftoken'
 CSRF_HEADER_NAME        = 'HTTP_X_CSRFTOKEN'

@@ -44,6 +44,7 @@ RUN apt-get update && apt-get install -y \
 # Ambil library yang sudah terinstall
 COPY --from=builder /root/.local /root/.local
 
+RUN mkdir -p /app/static && mkdir -p /app/media
 
 # Ambil semua code program
 COPY ./backend .
@@ -58,6 +59,7 @@ EXPOSE 8000
 # - Melakukan migrasi database
 # - Mengumpulkan file statis 
 # - Menjalankan server ASGI Daphne
-CMD python manage.py migrate && \
+CMD python manabge.py makemigrations && \
+    python manage.py migrate && \
     python manage.py collectstatic --noinput && \
     daphne -b 0.0.0.0 -p 8000 core.asgi:application

@@ -8,5 +8,5 @@ load_dotenv()
 
 class GoogleLogin(SocialLoginView):
     adapter_class = GoogleOAuth2Adapter
-    callback_url = f'{os.getenv('HOSTNAME')}/auth/google/callback/'
+    callback_url = f'{os.getenv('MY_SITE_URL')}/auth/google/callback/'
     client_class = OAuth2Client
