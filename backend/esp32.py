@@ -14,7 +14,7 @@ frontend    = "monitoring/frontend"
 
 # =========================================== #
 # ============ CALLBACK FUNCTION ============ #
-print("===== MQTT RUNNING =====")
+print("===== ESP32 RUNNING =====")
 # Callback saat MQTT berhasil terkoneksi 
 def onConnectCallback(client, userdata, flags, reasonCode, prop):
     # subscribe topic 
@@ -47,7 +47,7 @@ while True:
     message = {
             'type' : 'latest_data',
             'data' : [{
-                    "id"   : "G2XMLI70B2",
+                    "id"   : "BVN6P4D51Z",
                     "data" : random.randint(10, 100)
                 },
                 {
