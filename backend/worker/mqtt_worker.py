@@ -54,7 +54,7 @@ async def broadcast_latest_data():
 
 
 # ===================== MQTT CALLBACK =====================
-
+# Jika terhubung
 def on_connect(client, userdata, flags, reasoncode, properties=None):
     if reasoncode == 0:
         print("MQTT Connected")
@@ -63,23 +63,23 @@ def on_connect(client, userdata, flags, reasoncode, properties=None):
         print("MQTT Connect failed:", reasoncode)
 
 
+# Jika ada pesan masuk
 def on_message(client, userdata, message):
     try:
+        # Ambil data
         payload = json.loads(message.payload.decode())
         print("pesan masuk : ", payload)
 
         if payload["type"] == "latest_data":
-
             for sensor in payload["data"]:
-
                 # push redis
                 redis_client.hset(
                     "latest_data",
                     sensor["id"],
                     sensor["data"]
                 )
-                device = models.Device.objects.get(idDevice=sensor['id'])
-                models.ValueSensor.objects.create(device=device, value=sensor['data'])
+                # device = models.Device.objects.get(idDevice=sensor['id'])
+                # models.ValueSensor.objects.create(device=device, value=sensor['data'])
 
     except Exception as e:
         print("MQTT message error:", e)
