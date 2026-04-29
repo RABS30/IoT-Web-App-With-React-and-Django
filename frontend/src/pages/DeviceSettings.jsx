@@ -12,9 +12,9 @@ import api from "../api/AxiosConfig"
 export default function DeviceSettings() {
     // ========== STATES ==========
     const [deviceList, setDeviceList] = useState([]);
-    const [sensorList, setSensorList] = useState([]); // Untuk dropdown di NewDeviceForm
+    const [sensorList, setSensorList] = useState([]); 
     const [showAddModal, setShowAddModal] = useState(false);
-    const [isSubmitting, setIsSubmitting] = useState(false); // Loading state untuk tombol
+    const [isSubmitting, setIsSubmitting] = useState(false); 
     
     const [showToast, setShowToast] = useState({
         showToast: false,
@@ -46,13 +46,26 @@ export default function DeviceSettings() {
 
     // ========== HANDLERS ==========
 
-    // Fungsi Fetch Data (Gunakan useCallback agar bisa dipanggil di useEffect & handler lain)
+    // Fungsi Reset Toast yang akan dilempar ke komponen Toast
+    const closeToastHandler = useCallback(() => {
+        setShowToast(prev => ({ ...prev, showToast: false }));
+    }, []);
+
+    // Auto-hide toast setelah 3 detik agar tidak mengganggu UI
+    useEffect(() => {
+        if (showToast.showToast) {
+            const timer = setTimeout(() => {
+                closeToastHandler();
+            }, 3000);
+            return () => clearTimeout(timer);
+        }
+    }, [showToast.showToast, closeToastHandler]);
+
     const fetchDevices = useCallback(async (showNotification = false, message = 'Data diperbarui') => {
         try {
             const response = await api.get('device/', { params: filterOption });
             setDeviceList(response.data);
             
-            // Juga update sensorList jika tipenya sensor (untuk dropdown form)
             const sensorsOnly = response.data.filter(d => d.type === 'sensor');
             setSensorList(sensorsOnly);
 
@@ -74,27 +87,22 @@ export default function DeviceSettings() {
         }
     }, [filterOption]);
 
-    // Ambil data pertama kali saat mount
     useEffect(() => {
         fetchDevices();
-    }, []); // Run sekali saja
+    }, [fetchDevices]);
 
-    // Update status (Optimistic Update agar UI tidak delay)
     const statusDeviceChangeHandler = async (idDevice, type, status) => {
-        // Kita tambahkan pengecekan loading agar tidak bisa klik berkali-kali dalam waktu singkat
         if (isSubmitting) return;
 
         try {
             setIsSubmitting(true);
-            const response = await api.post('device/', {
+            await api.post('device/', {
                 post: "statusUpdate",
                 idDevice: idDevice,
                 type: type,
-                status: !status // Mengirim kebalikan dari status saat ini
+                status: !status 
             });
 
-            // HANYA refresh data jika request POST berhasil (200 OK)
-            // Gunakan fungsi fetch yang sudah ada agar UI terupdate sesuai DB
             await fetchDevices(true, 'Berhasil update status');
 
         } catch (error) {
@@ -107,7 +115,7 @@ export default function DeviceSettings() {
         } finally {
             setIsSubmitting(false);
         }
-    }
+    };
 
     const submitNewDeviceHandler = async (e) => {
         e.preventDefault();
@@ -123,9 +131,13 @@ export default function DeviceSettings() {
                 status: 'Success',
                 message: 'Device baru berhasil ditambahkan'
             });
-            fetchDevices(); // Refresh list
-            // Reset Form
-            setNewDeviceData({ ...newDeviceData, name: "", maxValue: "", threshold: "", measurement: "" });
+            fetchDevices(); 
+            setNewDeviceData({ 
+                post: "new", name: "", status: true, type: "sensor", 
+                maxValue: "", threshold: "", measurement: "", 
+                activation: "manual", comparison: ">=", sensorTarget: "", 
+                activationValue: 0, chart: 'line' 
+            });
         } catch (error) {
             setShowToast({
                 showToast: true,
@@ -151,7 +163,6 @@ export default function DeviceSettings() {
         setFilterOption(prev => ({ ...prev, [id]: value }));
     };
 
-    // Trigger filter saat filterOption berubah
     const getFilteredDataHandler = (e) => {
         if (e) e.preventDefault();
         fetchDevices(true, 'Filter diterapkan');
@@ -166,7 +177,7 @@ export default function DeviceSettings() {
             <div className="z-10 w-full max-w-7xl space-y-6">
                 <Toast 
                     showToast={showToast.showToast} 
-                    setShowToast={(val) => setShowToast(prev => ({ ...prev, showToast: val }))} 
+                    setShowToast={closeToastHandler} 
                     type={showToast.type} 
                     message={showToast.message} 
                     status={showToast.status} 

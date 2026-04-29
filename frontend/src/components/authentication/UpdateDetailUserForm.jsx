@@ -66,7 +66,7 @@ export default function UpdateDetailUserForm() {
         formData.append('first_name', user.first_name);
         formData.append('last_name', user.last_name);
         // periksa apakah avatar berupa url string atau file 
-        if (user.profile.avatar instanceof File) {
+        if (user.profile?.avatar instanceof File) {
             formData.append('profile.avatar', user.profile.avatar);
         }
 
